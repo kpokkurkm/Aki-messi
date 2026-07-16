@@ -45,7 +45,7 @@ async function cargarBaseDatos() {
         const cabecera = primeraLinea.split(separador);
         columnasPreguntas = cabecera.slice(5).map(col => limpiarTexto(col)); 
 
-        console.log("Cabeceras de preguntas detectadas:", columnasPreguntas);
+        console.log("Cabeceras de preguntas detectadas en Sheets:", columnasPreguntas);
 
         jugadores = [];
         for(let i = 1; i < lineas.length; i++) {
@@ -69,7 +69,6 @@ async function cargarBaseDatos() {
             jugadores.push(jugador);
         }
         console.log("Base de datos cargada con éxito. Jugadores totales:", jugadores.length);
-        console.log("Ejemplo de primer jugador parseado:", jugadores[0]);
     } catch (e) {
         console.error("Error al cargar la base de datos", e);
         document.getElementById("texto-pregunta").innerText = "⚠️ Error al conectar con la base de datos de AkiMessi.";
@@ -97,9 +96,7 @@ function hacerSiguientePregunta() {
             let resEsperada = j.atributos[attr];
             let resDada = respuestasUsuario[attr];
             
-            // Si el usuario contestó SÍ (1) o NO (0) a una pregunta...
             if (resDada === 1 || resDada === 0) {
-                // ...y el jugador tiene cargado un valor diferente (y que no sea "no lo sé" / -1)
                 if (resEsperada !== -1 && resEsperada !== resDada) {
                     return false; // Descartado
                 }
@@ -109,10 +106,21 @@ function hacerSiguientePregunta() {
     });
 
     console.log(`Pregunta ${numeroPregunta} | Candidatos restantes: ${candidatosActivos.length}`);
-    console.log("Candidatos que siguen en juego:", candidatosActivos.map(j => j.nombre));
+    
+    // Si solo queda un candidato, ¡adivinamos inmediatamente!
+    if (candidatosActivos.length === 1) {
+        adivinarJugador(candidatosActivos[0]);
+        return;
+    }
 
-    // Si nos quedamos sin candidatos o solo queda 1, adivinamos
-    if (candidatosActivos.length <= 1 || numeroPregunta > 10) {
+    // Si nos quedamos sin candidatos en absoluto
+    if (candidatosActivos.length === 0) {
+        adivinarJugador(null);
+        return;
+    }
+
+    // Si ya pasamos la ronda 10, adivinamos con el que mejor punteo tenga de la lista restante
+    if (numeroPregunta > 10) {
         adivinarJugador(candidatosActivos[0]);
         return;
     }
@@ -126,6 +134,12 @@ function hacerSiguientePregunta() {
     // 2. Elegir la mejor pregunta
     let mejorAtributo = elegirMejorAtributo(candidatosActivos);
     
+    // Salvaguarda: si no encuentra una pregunta ideal pero quedan muchos candidatos, agarra cualquier pregunta restante
+    if (!mejorAtributo) {
+        mejorAtributo = columnasPreguntas.find(attr => respuestasUsuario[attr] === undefined);
+    }
+
+    // Si de verdad ya no quedan más preguntas disponibles en la base de datos
     if (!mejorAtributo) {
         adivinarJugador(candidatosActivos[0]);
         return;
@@ -152,9 +166,11 @@ function elegirMejorAtributo(listaCandidatos) {
         let conSueldoDeSies = listaCandidatos.filter(j => j.atributos[attr] === 1).length;
         let conSueldoDeNoes = listaCandidatos.filter(j => j.atributos[attr] === 0).length;
 
+        // Buscamos que divida lo más equilibrado posible (lo más cercano a diferencia 0)
         let diferencia = Math.abs(conSueldoDeSies - conSueldoDeNoes);
         
-        if (diferencia < mejorDiferencia) {
+        // Solo la tomamos en cuenta si realmente ayuda a dividir el grupo activo
+        if (diferencia < mejorDiferencia && (conSueldoDeSies > 0 || conSueldoDeNoes > 0)) {
             mejorDiferencia = diferencia;
             mejorAttr = attr;
         }
