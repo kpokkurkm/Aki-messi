@@ -1,5 +1,5 @@
 // URL de tu Google Sheets publicado como CSV con truco para evitar caché
-const BASE_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTl75_rySeY1kBnMnmjIZaA3fDJwKZt_IBI9Afq0f9TE09Dsr0heUOALSN8Ay2r7JIbViiF6Pqeoxpw/pub?gid=0&single=true&output=csv";
+const CSV_FILE = "Hoja1.csv";
 const SHEET_CSV_URL = `${BASE_URL}&t=${new Date().getTime()}`;
 
 let jugadores = [];
@@ -33,7 +33,7 @@ function parsearValorCelda(valor) {
 
 async function cargarBaseDatos() {
     try {
-        const respuesta = await fetch(SHEET_CSV_URL);
+        const respuesta = await fetch(CSV_FILE); // Carga el archivo local
         const texto = await respuesta.text();
         const lineas = texto.split("\n").map(l => l.replace("\r", "").trim()).filter(l => l.length > 0);
         
