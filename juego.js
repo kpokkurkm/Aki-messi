@@ -14,19 +14,35 @@ window.onload = async () => {
     await cargarBaseDatos();
 };
 
-// Función para limpiar textos de cabeceras (quita espacios, saltos de línea y caracteres raros)
+// Función para limpiar textos de cabeceras (quita espacios y saltos de línea)
 function limpiarTexto(texto) {
     if (!texto) return "";
     return texto.trim()
-                .replace(/[\r\n]+/g, "") // Elimina saltos de línea ocultos
+                .replace(/[\r\n]+/g, "")
                 .toUpperCase();
+}
+
+// Convierte celdas de Sheets (1, 0, SI, SÍ, NO, etc.) a formato estándar (1, 0, o -1)
+function parsearValorCelda(valor) {
+    if (!valor) return -1;
+    let v = valor.trim().toUpperCase();
+    
+    // Si es un número escrito como texto ("1" o "0")
+    if (v === "1") return 1;
+    if (v === "0") return 0;
+    
+    // Si está escrito con letras
+    if (v === "SI" || v === "SÍ") return 1;
+    if (v === "NO") return 0;
+    
+    // Cualquier otra cosa o vacío se considera "No lo sé"
+    return -1;
 }
 
 async function cargarBaseDatos() {
     try {
         const respuesta = await fetch(SHEET_CSV_URL);
         const texto = await respuesta.text();
-        // Separamos por líneas y limpiamos retornos de carro molestos de Windows (\r)
         const lineas = texto.split("\n").map(l => l.replace("\r", "").trim()).filter(l => l.length > 0);
         
         if (lineas.length === 0) return;
@@ -35,7 +51,7 @@ async function cargarBaseDatos() {
         const primeraLinea = lineas[0];
         const separador = primeraLinea.includes(";") ? ";" : ",";
         
-        // Extraer cabecera usando el separador correcto y limpiando columnas
+        // Extraer cabeceras limpias
         const cabecera = primeraLinea.split(separador);
         columnasPreguntas = cabecera.slice(5).map(col => limpiarTexto(col)); 
 
@@ -56,16 +72,16 @@ async function cargarBaseDatos() {
                 atributos: {}
             };
 
-            // Rellenar las características
+            // Rellenar las características usando el nuevo parseador inteligente
             for(let j = 0; j < columnasPreguntas.length; j++) {
                 let valorCelda = c[j + 5];
-                let valorParseado = parseInt(valorCelda);
                 let claveAtributo = columnasPreguntas[j];
-                jugador.atributos[claveAtributo] = isNaN(valorParseado) ? -1 : valorParseado;
+                jugador.atributos[claveAtributo] = parsearValorCelda(valorCelda);
             }
             jugadores.push(jugador);
         }
         console.log("Base de datos cargada con éxito. Jugadores totales:", jugadores.length);
+        console.log("Ejemplo de primer jugador parseado:", jugadores[0]); // Esto nos ayudará a ver si lee bien las características
     } catch (e) {
         console.error("Error al cargar la base de datos", e);
         document.getElementById("texto-pregunta").innerText = "⚠️ Error al conectar con la base de datos de AkiMessi.";
@@ -100,7 +116,7 @@ function hacerSiguientePregunta() {
         return true;
     });
 
-    console.log(`Pregunta ${numeroPregunta} - Candidatos restantes:`, candidatosActivos.length);
+    console.log(`Pregunta ${numeroPregunta} | Candidatos restantes:`, candidatosActivos.length);
 
     // Si ya respondimos la pregunta 10, o nos quedamos sin candidatos, o solo queda 1
     if (numeroPregunta > 10 || candidatosActivos.length <= 1) {
@@ -211,7 +227,6 @@ function adivinarJugador(jugador) {
     if (jugador) {
         document.getElementById("texto-pregunta").innerText = `¡YA SÉ QUIÊN ES! ¡Es ${jugador.nombre}! Que juega en ${jugador.equipo}. ¿A que te la gané, bobo?`;
         
-        // Intentar cargar la foto del jugador, si falla o no está, dejamos a Messi Genio
         const rutaFoto = `img/futbolistas/${jugador.foto}`;
         imgElement.src = rutaFoto;
         imgElement.onerror = () => {
