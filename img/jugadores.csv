@@ -1,0 +1,151 @@
+ID,NOMBRE,FOTO,EQUIPO_ACTUAL,NACIONALIDAD,ZURDO,RETIRADO,SUB_21,PORTERO,DEFENSA,CENTROCAMPISTA,DELANTERO,EUROPA,AFRICA,AMERICA_NORTE,AMERICA_SUR,OCEANIA,ASIA,LALIGA,PREMIER,SERIE_A,BUNDESLIGA,LIGUE_1,SELECCION_NACIONAL,MUNDIAL,EURO_AMERICA,CHAMPIONS,BALON_ORO,MAX_GOLEADOR,CAPITAN,FICHAJE_CARO,ENTRENADOR,CALVO,LEYENDA_90
+1,Lionel Messi,messi.png,Inter Miami,Argentina,1,0,0,0,0,0,1,0,0,0,1,0,0,1,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0
+2,Cristiano Ronaldo,cristiano.png,Al Nassr,Portugal,0,0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,1,0,1,1,1,1,1,1,0,0,0
+3,Kylian Mbappe,mbappe.png,Real Madrid,Francia,0,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,1,1,1,0,0,0,1,1,1,0,0,0
+4,Erling Haaland,haaland.png,Manchester City,Noruega,1,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,1,0,1,0,0,1,0,1,0,1,0,0,0
+5,Lamine Yamal,lamineyamal.png,Barcelona,Espana,1,0,1,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0
+6,Cole Palmer,colepalmer.png,Chelsea,Inglaterra,1,0,0,0,0,1,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0
+7,Florian Wirtz,florianwirtz.png,Bayer Leverkusen,Alemania,0,0,1,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0
+8,Jude Bellingham,bellingham.png,Real Madrid,Inglaterra,0,0,1,0,0,1,0,1,0,0,0,0,0,1,0,0,1,0,1,0,0,1,0,0,0,1,0,0,0
+9,Vinicius Jr,vinicius.png,Real Madrid,Brasil,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,0,1,0,1,0,0,0
+10,Rodri Hernandez,rodri.png,Manchester City,Espana,0,0,0,0,0,1,0,1,0,0,0,0,0,1,1,0,0,0,1,0,1,1,1,0,1,0,0,0,0
+11,Pele,pele.png,Retirado,Brasil,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,1,1,0,0,1,1,0,0,0,1
+12,Diego Maradona,maradona.png,Retirado,Argentina,1,1,0,0,0,1,0,0,0,0,1,0,0,1,0,1,0,0,1,1,0,0,0,1,1,1,1,0,1
+13,Johan Cruyff,cruyff.png,Retirado,Paises Bajos,0,1,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,1,1,0,0,0,1,1,1,0,1,0,1
+14,Zinedine Zidane,zidane.png,Retirado,Francia,0,1,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,1,1,1,1,1,1,0,1,1,1,1
+15,Ronaldinho,ronaldinho.png,Retirado,Brasil,0,1,0,0,0,0,1,0,0,0,1,0,0,1,0,1,0,1,1,0,1,1,1,0,1,0,0,0
+16,Ronaldo Nazario,ronaldo.png,Retirado,Brasil,0,1,0,0,0,0,1,0,0,0,1,0,0,1,0,1,0,0,1,1,1,0,0,1,1,1,0,1,0
+17,Steven Gerrard,gerrard.png,Retirado,Inglaterra,0,1,0,0,0,1,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0,1,0,0,0,1
+18,Gianluigi Buffon,buffon.png,Retirado,Italia,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,1,1,1,0,0,0,0,1,0,0,1,0
+19,Iker Casillas,casillas.png,Retirado,Espana,0,1,0,1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,1,1,1,0,0,1,0,0,0
+20,Andres Iniesta,iniesta.png,Retirado,Espana,0,1,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,1,1,1,1,0,0,1,0,0,0
+21,Isco Alarcon,isco.png,Real Betis,Espana,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,1,0,0,1,0,0,0,0
+22,Gerard Moreno,gmoreno.png,Villarreal,Espana,1,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0
+23,Martin Zubimendi,zubimendi.png,Real Sociedad,Espana,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0
+24,Marcos Llorente,mllorente.png,Atletico de Madrid,Espana,0,0,0,0,1,1,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
+25,Paulo Dybala,dybala.png,Roma,Argentina,1,0,0,0,0,0,1,0,0,0,1,0,0,1,0,1,0,0,1,1,1,0,0,1,0,0,0,0
+26,Robert Lewandowski,lewandowski.png,Barcelona,Polonia,0,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,1,0,1,0,0,1,0,1,0,1,0,0,0
+27,Kevin De Bruyne,debruyne.png,Manchester City,Belgica,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,0,1,0,1,0,0,1,0,0,1,0,1,0,0
+28,Mohamed Salah,salah.png,Liverpool,Egipto,1,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,1,0,0,1,0,1,1,0,0,0,0
+29,Antoine Griezmann,griezmann.png,Atletico de Madrid,Francia,1,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,1,1,0,0,0,1,1,1,0,0,0
+30,Harry Kane,kane.png,Bayern Munich,Inglaterra,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,1,0,1,0,0,0,0,1,1,0,0,0,0
+31,Luka Modric,modric.png,Real Madrid,Croacia,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,1,1,0,1,1,0,0,0
+32,Pedri Gonzalez,pedri.png,Barcelona,Espana,0,0,1,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0
+33,Gavi,gavi.png,Barcelona,Espana,0,0,1,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
+34,Bukayo Saka,saka.png,Arsenal,Inglaterra,1,0,1,0,0,0,1,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1,0,0,0
+35,Jamal Musiala,musiala.png,Bayern Munich,Alemania,0,0,1,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0
+36,Xavi Hernandez,xavi.png,Retirado,Espana,0,1,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,1,1,1,1,0,0,1,1,0,1,0
+37,Andrea Pirlo,pirlo.png,Retirado,Italia,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,1,0,0,1,1,0,0,0,0,1,0,0,1,0
+38,Kaka,kaka.png,Retirado,Brasil,0,1,0,0,0,1,0,0,0,0,1,0,0,1,0,1,0,0,1,1,0,0,1,1,0,0,0,0
+39,Thierry Henry,henry.png,Retirado,Francia,0,1,0,0,0,0,1,1,0,0,0,0,0,1,1,0,0,0,1,1,0,1,0,1,1,0,0,0
+40,David Beckham,beckham.png,Retirado,Inglaterra,0,1,0,0,0,1,0,1,0,0,0,0,0,1,1,1,0,0,1,0,0,0,0,1,0,1,0,0,0
+41,Carles Puyol,puyol.png,Retirado,Espana,0,1,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,1,1,1,0,0,1,1,0,0,0
+42,Paolo Maldini,maldini.png,Retirado,Italia,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,5,1,0,0,0,0
+43,Franz Beckenbauer,beckenbauer.png,Retirado,Alemania,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,1,1,1,0,1,0,3,1,0,1,0,1
+44,Michel Platini,platini.png,Retirado,Francia,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,1,0,0,1,1,1,0,1,0,1,0,0,0,1
+45,James Rodriguez,james.png,Rayo Vallecano,Colombia,1,0,0,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0
+46,Alvaro Morata,morata.png,Milan,Espana,0,0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,1,0,1,1,0,0,1,1,1,0,0
+47,Dani Olmo,daniolmo.png,Barcelona,Espana,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,0,1,0,1,0,1,0,0,0,0,0,0,0,0
+48,Mikel Oyarzabal,oyarzabal.png,Real Sociedad,Espana,1,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,1,0,1,0,0,0,0,1,0,0,0
+49,Keylor Navas,keylor.png,Retirado,Costa Rica,0,1,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0,0,1,0,3,0,0,1,0,0
+50,Heungmin Son,son.png,Tottenham,Corea del Sur,0,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0
+51,Lautaro Martinez,lautaro.png,Inter de Milan,Argentina,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0,1,1,1,1,0,0,0,1,0,0,0
+52,Luis Diaz,luisdiaz.png,Liverpool,Colombia,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0
+53,Alisson Becker,alisson.png,Liverpool,Brasil,0,0,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,0,1,0,0,1,0,0
+54,Thibaut Courtois,courtois.png,Real Madrid,Belgica,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,1,0,0,1,0,0,0,0
+55,Ronald Araujo,araujo.png,Barcelona,Uruguay,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
+56,Fede Valverde,valverde.png,Real Madrid,Uruguay,0,0,0,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0
+57,Bernardo Silva,bernardo.png,Manchester City,Portugal,1,0,0,0,0,1,0,1,0,0,0,0,0,1,1,0,0,0,1,0,0,1,0,1,0,0,0,0,0
+58,Marco van Basten,vanbasten.png,Retirado,Paises Bajos,0,1,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,3,1,1,1,0,0
+59,Eusebio,eusebio.png,Retirado,Portugal,0,1,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,1,1,1,0,1
+60,Roberto Carlos,robertocarlos.png,Retirado,Brasil,1,1,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,1,1,1,1,0,3,0,0,1,0,0
+61,Zlatan Ibrahimovic,ibrahimovic.png,Retirado,Suecia,0,1,0,0,0,0,1,1,0,0,0,0,0,1,0,1,0,1,1,0,0,0,0,1,0,1,1,0,0
+62,Luis Figo,figo.png,Retirado,Portugal,0,1,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,1,1,1,1,1,0,0
+63,Wayne Rooney,rooney.png,Retirado,Inglaterra,0,1,0,0,0,0,1,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0
+64,Francesco Totti,totti.png,Retirado,Italia,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,1,0,0,1,1,0,0,0,1,0,0,1,1,0,0
+65,Angel Di Maria,dimaria.png,Benfica,Argentina,1,0,0,0,0,0,1,0,0,0,1,0,0,1,0,0,0,0,1,1,0,0,1,1,1,1,0,0,1,0,0
+66,Jack Grealish,grealish.png,Manchester City,Inglaterra,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,0,0,0
+67,Ivan Rakitic,rakitic.png,Hajduk Split,Croacia,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,1,0,1,1,0,0,1,0,0
+68,Aubameyang,aubameyang.png,Al Qadsiah,Gabon,0,0,0,0,0,0,1,0,1,0,0,0,0,1,1,0,1,1,1,0,0,0,0,0,0,0,1,0,0
+69,Romelu Lukaku,lukaku.png,Napoli,Belgica,1,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,0,0,0,0,0,0,0,1,0,0
+70,Christian Eriksen,eriksen.png,Manchester United,Dinamarca,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,1,0,0,1,0,0,0,0,0,0,0,1,0,0
+71,Raphinha,raphinha.png,Barcelona,Brasil,1,0,0,0,0,0,1,0,0,0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
+72,Nico Williams,nicowilliams.png,Athletic Club,Espana,0,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,1,0,1,0,0,1,0,0,0,0,0
+73,Dani Carvajal,carvajal.png,Real Madrid,Espana,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,1,1,1,0,6,0,0,1,0,0
+74,William Saliba,saliba.png,Arsenal,Francia,0,0,0,0,1,0,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0
+75,Phil Foden,foden.png,Manchester City,Inglaterra,1,0,0,0,0,1,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,0,0,0
+76,Samuel Etoo,etoo.png,Retirado,Camerun,0,1,0,0,0,0,1,0,1,0,0,0,0,1,0,1,0,1,1,0,0,0,0,3,0,0,1,0,0
+77,Didier Drogba,drogba.png,Retirado,Costa de Marfil,0,1,0,0,0,0,1,0,1,0,0,0,0,0,1,0,0,1,1,0,0,0,0,1,0,0,1,0,0
+78,Frank Lampard,lampard.png,Retirado,Inglaterra,0,1,0,0,0,1,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0,1,1,0
+79,Patrick Vieira,vieira.png,Retirado,Francia,0,1,0,0,0,1,0,1,0,0,0,0,0,0,1,1,0,0,1,1,1,1,0,0,0,1,0,0,1
+80,Arjen Robben,robben.png,Retirado,Paises Bajos,1,1,0,0,0,0,1,1,0,0,0,0,0,1,1,0,1,0,1,0,0,0,0,1,0,0,1,0,0
+81,Alexis Sanchez,alexis.png,Udinese,Chile,0,0,0,0,0,0,1,0,0,0,1,0,0,1,1,0,0,1,1,0,0,0,2,0,0,0,1,0,0
+82,Joao Felix,joaofelix.png,Chelsea,Portugal,0,0,0,0,0,1,0,1,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,0,1,0,0,0
+83,Memphis Depay,depay.png,Corinthians,Paises Bajos,0,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,1,0,0
+84,Edinson Cavani,cavani.png,Boca Juniors,Uruguay,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,1,1,0,1,1,0,0,1,0,0
+85,Thiago Alcantara,thiago.png,Retirado,Espana,0,1,0,0,0,1,0,1,0,0,0,0,0,1,1,0,1,0,1,1,0,0,1,2,0,0,0,0,0
+86,Martin Odegaard,odegaard.png,Arsenal,Noruega,1,0,0,0,0,1,0,1,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0
+87,Bruno Fernandes,brunofernandes.png,Manchester United,Portugal,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0
+88,Alphonso Davies,alphonsodavies.png,Bayern Munich,Canada,1,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,0,0
+89,Lev Yashin,yashin.png,Retirado,Rusia,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,1
+90,Bobby Charlton,charlton.png,Retirado,Inglaterra,0,1,0,0,0,1,0,1,0,0,0,0,0,0,1,0,0,0,1,1,0,0,1,0,0,1,0,1,0,1
+91,Achraf Hakimi,hakimi.png,PSG,Marruecos,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,1,0,1,1,0,0,0,0,0,0,0,0,1,0,0
+92,James Maddison,maddison.png,Tottenham,Inglaterra,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0
+93,Ben Yedder,benyedder.png,Retirado,Francia,0,1,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,1,1,0,0
+94,Kieran Trippier,trippier.png,Newcastle,Inglaterra,0,0,0,0,1,0,0,1,0,0,0,0,0,1,1,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0
+95,Marco Reus,reus.png,LA Galaxy,Alemania,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,0
+96,Federico Chiesa,chiesa.png,Liverpool,Italia,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0
+97,Dusan Vlahovic,vlahovic.png,Juventus,Serbia,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0
+98,Luis Suarez,suarez.png,Inter Miami,Uruguay,0,0,0,0,0,0,1,0,0,0,1,0,0,1,1,0,0,0,1,1,1,1,0,0,1,1,1,1,0
+99,Marc-Andre ter Stegen,terstegen.png,Barcelona,Alemania,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0
+100,Ruben Dias,rubendias.png,Manchester City,Portugal,0,0,0,0,1,0,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0
+101,Gerd Muller,muller.png,Retirado,Alemania,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,0,1,1,0,0,1,0,1,0,0,1,0,1
+102,Garrincha,garrincha.png,Retirado,Brasil,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,1
+103,Romario,romario.png,Retirado,Brasil,0,1,0,0,0,0,1,0,0,0,1,0,0,1,0,0,0,0,1,1,0,0,1,1,0,0,1,0,0,1
+104,Rivaldo,rivaldo.png,Retirado,Brasil,1,1,0,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,1,1,0,1,1,1,1,1,0,0
+105,Jamie Vardy,vardy.png,Leicester City,Inglaterra,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,1,1,0,0
+106,Douglas Luiz,douglasluiz.png,Juventus,Brasil,0,0,0,0,0,1,0,0,0,0,1,0,0,0,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0
+107,Sergej Milinkovic-Savic,savic.png,Al Hilal,Serbia,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0
+108,Wataru Endo,endo.png,Liverpool,Japon,0,0,0,0,0,1,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0
+109,Alexander Isak,isak.png,Newcastle,Suecia,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0
+110,Teemu Pukki,pukki.png,Minnesota United,Finlandia,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0
+111,Sonny Kittel,kittel.png,Retirado,Alemania,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0
+112,Granit Xhaka,xhaka.png,Bayer Leverkusen,Suiza,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,1,1,0,0,1,0,0,0,0,0,1,0,0
+113,Lucas Paqueta,paqueta.png,West Ham,Brasil,1,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0
+114,Viktor Gyokeres,gyokeres.png,Sporting CP,Suecia,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0
+115,Santiago Gimenez,gimenez.png,Feyenoord,Mexico,0,0,1,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0
+116,George Weah,weah.png,Retirado,Liberia,0,1,0,0,0,0,1,0,1,0,0,0,0,0,0,1,0,1,1,1,0,1,0,0,1,1,1,1,0,0
+117,Hristo Stoichkov,stoichkov.png,Retirado,Bulgaria,1,1,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,1,1,0,0,1,0,0,1,1,1,0,1
+118,Gheorghe Hagi,hagi.png,Retirado,Rumania,1,1,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,1,1,0,0,1,0,0,0,0,1,0,1
+119,Hugo Sanchez,hugosanchez.png,Retirado,Mexico,0,1,0,0,0,0,1,0,0,1,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,1
+120,Carlos Valderrama,valderrama.png,Retirado,Colombia,0,1,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,1
+121,Gabriel Batistuta,batistuta.png,Retirado,Argentina,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0,1,1,0,0,1,0,0,0,1,1,0,1
+122,Michael Laudrup,laudrup.png,Retirado,Dinamarca,0,1,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,1,1,0,0,1,0,0,1,0,1,0,1
+123,Roy Keane,roykeane.png,Retirado,Irlanda,0,1,0,0,0,1,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,1,0,1,0,1
+124,Pavel Nedved,nedved.png,Retirado,Rumania,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,0,0,1,1,0,1
+125,Ruud van Nistelrooy,nistelrooy.png,Retirado,Paises Bajos,0,1,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,0,0,0,0,0,0,1,0,1,0,1
+126,Peter Schmeichel,schmeichel.png,Retirado,Dinamarca,0,1,0,1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,1,0,1,0,1,0,1
+127,Oliver Kahn,kahn.png,Retirado,Alemania,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,1,0,0,1,0,0,1,0,1,0,1
+128,Luis Suarez Miramontes,suarezmira.png,Retirado,Espana,0,1,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,1,1,0,0,1,0,1,0,1,1,0,1
+129,Dejan Kulusevski,kulusevski.png,Tottenham,Suecia,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0
+130,Dominik Szoboszlai,szoboszlai.png,Liverpool,Hungria,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0
+131,Inaki Williams,inaki.png,Athletic Club,Ghana,0,0,0,0,0,0,1,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0
+132,Yassine Bounou,bono.png,Al Hilal,Marruecos,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0
+133,Alex Grimaldo,grimaldo.png,Bayer Leverkusen,Espana,1,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0
+134,Goncalo Ramos,goncaloramos.png,PSG,Portugal,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0
+135,Gianluigi Donnarumma,donnarumma.png,PSG,Italia,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,1,1,0,0,0,1,0,1,0,0,1,0,0
+136,Landro Trossard,trossard.png,Arsenal,Belgica,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0
+137,Mateo Kovacic,kovacic.png,Manchester City,Croacia,0,0,0,0,0,1,0,1,0,0,0,0,0,1,1,1,0,0,1,0,0,0,0,0,1,4,0,0,0,0
+138,Serhou Guirassy,guirassy.png,Borussia Dortmund,Guinea,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0
+139,Jonathan David,jondavid.png,Lille,Canada,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,0,0
+140,Takefusa Kubo,kubo.png,Real Sociedad,Japon,1,0,0,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0
+141,John McGinn,mcginn.png,Aston Villa,Escocia,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0
+142,Lucas Ocampos,ocampos.png,Sevilla,Argentina,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0,0,0,0,1,0,0,0,0,1,0,1,1,0,1,0
+143,Christian Romero,cutiromero.png,Tottenham,Argentina,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,1,1,0,0,1,1,1,0,0,0,1,0
+144,Lisandro Martinez,lichamartinez.png,Manchester United,Argentina,1,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,1,1,0,0,0,0,0
+145,Emi Martinez,dibumartinez.png,Aston Villa,Argentina,0,0,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,1,1,0,0,1,1,0
+146,Jurrien Timber,timber.png,Arsenal,Paises Bajos,0,0,0,0,1,0,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0
+147,Alejandro Garnacho,garnacho.png,Manchester United,Argentina,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,0,0,0,0
+148,Micky van de Ven,vandeven.png,Tottenham,Paises Bajos,1,0,0,0,1,0,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0
+149,Amadou Onana,onana.png,Aston Villa,Belgica,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0
+150,Lamine Camara,laminecamara.png,Monaco,Senegal,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0

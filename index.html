@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Qué adivinás, bobo?</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <div id="pantalla-juego" class="contenedor-juego">
+        <!-- Marcador superior temporal -->
+        <div class="marcador-superior">
+            <span id="contador-preguntas">Pregunta Nº 1</span>
+        </div>
+
+        <!-- Campo de fútbol de fondo con la línea divisoria -->
+        <div class="campo-futbol">
+            <div class="linea-medio"></div>
+        </div>
+
+        <!-- Contenedor del Genio y su Bocadillo -->
+        <div class="personaje-contenedor">
+            <div class="bocadillo-charla" id="bocadillo">
+                <p id="texto-pregunta">¡Hola! Pensá en un futbolista... ¿Qué adivinás, bobo?</p>
+            </div>
+            <img src="img/messi_genio.png" id="imagen-messi" alt="AkiMessi Genio">
+        </div>
+
+        <!-- Panel de botones inferior -->
+        <div class="botones-contenedor">
+            <div class="fila-botones">
+                <button class="btn btn-si" onclick="responder(1)">SÍ</button>
+                <button class="btn btn-no" onclick="responder(0)">NO</button>
+            </div>
+            <div class="fila-unika">
+                <button class="btn btn-nose" onclick="responder(-1)">NO LO SÉ</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="juego.js"></script>
+</body>
+</html>

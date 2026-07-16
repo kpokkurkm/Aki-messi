@@ -1,0 +1,198 @@
+/* Configuración básica de pantalla completa móvil */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #1a4314;
+}
+
+/* Contenedor principal estilo móvil vertical */
+.contenedor-juego {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    overflow: hidden;
+    transition: background-color 0.5s ease;
+}
+
+/* Simulación de campo de fútbol */
+.campo-futbol {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, #2e7d32 40%, #1b5e20 100%);
+    z-index: 1;
+}
+
+.linea-medio {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 4px;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: translateX(-50%);
+}
+
+/* Marcador de arriba */
+.marcador-superior {
+    position: relative;
+    z-index: 2;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: 2px solid #fff;
+    margin-top: 10px;
+}
+
+/* Contenedor de Messi y Bocadillo */
+.personaje-contenedor {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Bocadillo saliendo de su boca */
+.bocadillo-charla {
+    position: relative;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 15px 20px;
+    max-width: 85%;
+    text-align: center;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    border: 3px solid #111;
+    margin-bottom: 25px;
+}
+
+.bocadillo-charla:after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-width: 15px 15px 0;
+    border-style: solid;
+    border-color: #ffffff transparent;
+    display: block;
+    transform: translateX(-50%);
+}
+
+.bocadillo-charla:before {
+    content: '';
+    position: absolute;
+    bottom: -19px;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-width: 16px 16px 0;
+    border-style: solid;
+    border-color: #111 transparent;
+    display: block;
+    transform: translateX(-50%);
+    z-index: -1;
+}
+
+#texto-pregunta {
+    color: #111;
+    font-size: 1.2rem;
+    font-weight: bold;
+    line-height: 1.4;
+}
+
+/* Personaje Messi */
+#imagen-messi {
+    width: auto;
+    height: 280px;
+    object-fit: contain;
+    filter: drop-shadow(0px 8px 12px rgba(0,0,0,0.4));
+    transition: transform 0.3s ease;
+    mix-blend-mode: multiply;
+}
+
+/* Efecto Dorado de la Ronda 10 */
+.contenedor-juego.ronda-dorada .campo-futbol {
+    background: radial-gradient(circle, #fbc02d 30%, #f57f17 100%) !important;
+}
+
+/* Botones con la distribución del boceto */
+.botones-contenedor {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.fila-botones {
+    display: flex;
+    width: 100%;
+    gap: 15px;
+}
+
+.fila-unika {
+    display: flex;
+    justify-content: center;
+}
+
+.btn {
+    border: 3px solid #111;
+    border-radius: 40px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #111;
+    transition: all 0.1s ease;
+    outline: none;
+    padding: 15px 0;
+}
+
+.btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #111;
+}
+
+.btn-si {
+    flex: 1;
+    background-color: #4caf50;
+    color: white;
+}
+
+.btn-no {
+    flex: 1;
+    background-color: #f44336;
+    color: white;
+}
+
+.btn-nose {
+    width: 80%;
+    background-color: #ffeb3b;
+    color: #111;
+}
