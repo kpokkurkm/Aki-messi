@@ -1,12 +1,12 @@
 // --- CONFIGURACIÓN ---
-const CSV_FILE = "datos.csv";
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTl75_rySeY1kBnMnmjIZaA3fDJwKZt_IBI9Afq0f9TE09Dsr0heUOALSN8Ay2r7JIbViiF6Pqeoxpw/pub?gid=0&single=true&output=csv";
 let jugadores = [];
 let respuestasUsuario = {};
 let numeroPregunta = 1;
 let juegoIniciado = false;
 let atributoActual = "";
 
-// Lista de columnas (DEBE COINCIDIR EXACTAMENTE CON TU CSV)
+// Lista de columnas que definen tus preguntas
 const columnasPreguntas = [
     "ZURDO", "RETIRADO", "SUB_21", "PORTERO", "DEFENSA", "CENTROCAMPISTA", "DELANTERO",
     "EUROPA", "EUROPA_HISTORICO", "AFRICA", "AMERICA_NORTE", "AMERICA_SUR", "OCEANIA", "ASIA",
@@ -18,18 +18,17 @@ const columnasPreguntas = [
 // --- CARGA DE DATOS ---
 async function cargarBaseDatos() {
     try {
-        const respuesta = await fetch(CSV_FILE);
-        if (!respuesta.ok) throw new Error("No se pudo cargar " + CSV_FILE);
+        const respuesta = await fetch(CSV_URL);
+        if (!respuesta.ok) throw new Error("No se pudo conectar con Google Sheets");
         
         const texto = await respuesta.text();
         const lineas = texto.split("\n").map(l => l.trim()).filter(l => l.length > 0);
         
-        // Detectar si es coma o punto y coma
-        const separador = lineas[0].includes(";") ? ";" : ",";
-        
         jugadores = [];
+        // Empezamos en 1 para saltar la cabecera
         for(let i = 1; i < lineas.length; i++) {
-            const c = lineas[i].split(separador);
+            // Google Sheets CSV suele usar comas
+            const c = lineas[i].split(","); 
             if(c.length < 5) continue;
 
             let jugador = {
@@ -43,7 +42,7 @@ async function cargarBaseDatos() {
             }
             jugadores.push(jugador);
         }
-        console.log("Base de datos cargada. Jugadores:", jugadores.length);
+        console.log("Datos cargados correctamente. Jugadores:", jugadores.length);
         iniciarJuego();
     } catch (e) {
         console.error("Error al cargar:", e);
@@ -51,6 +50,8 @@ async function cargarBaseDatos() {
     }
 }
 
+// Iniciar al cargar
+cargarBaseDatos();
 // --- LÓGICA DE JUEGO ---
 function iniciarJuego() {
     if (jugadores.length === 0) return;
