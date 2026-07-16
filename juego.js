@@ -1,192 +1,62 @@
-// URL de tu Google Sheets publicado como CSV con truco para evitar caché
-const CSV_FILE = "Hoja1.csv";
-const SHEET_CSV_URL = `${BASE_URL}&t=${new Date().getTime()}`;
-
+// --- CONFIGURACIÓN ---
+const CSV_FILE = "datos.csv";
 let jugadores = [];
-let columnasPreguntas = [];
 let respuestasUsuario = {};
 let numeroPregunta = 1;
+let juegoIniciado = false;
 let atributoActual = "";
-let juegoIniciado = false; 
 
-// Cargar la base de datos de inmediato al abrir la aplicación
-window.onload = async () => {
-    await cargarBaseDatos();
-};
+// Lista de columnas (DEBE COINCIDIR EXACTAMENTE CON TU CSV)
+const columnasPreguntas = [
+    "ZURDO", "RETIRADO", "SUB_21", "PORTERO", "DEFENSA", "CENTROCAMPISTA", "DELANTERO",
+    "EUROPA", "EUROPA_HISTORICO", "AFRICA", "AMERICA_NORTE", "AMERICA_SUR", "OCEANIA", "ASIA",
+    "LALIGA", "LALIGA_HISTORICO", "PREMIER", "PREMIER_HISTORICO", "SERIE_A", "BUNDESLIGA", "LIGUE_1",
+    "SELECCION_NACIONAL", "MUNDIAL", "EURO_AMERICA", "CHAMPIONS", "BALON_ORO", "MAX_GOLEADOR", "CAPITAN",
+    "FICHAJE_CARO", "ENTRENADOR", "CALVO", "LEYENDA_90"
+];
 
-function limpiarTexto(texto) {
-    if (!texto) return "";
-    return texto.trim()
-                .replace(/[\r\n]+/g, "")
-                .toUpperCase();
-}
-
-function parsearValorCelda(valor) {
-    if (valor === undefined || valor === null) return -1;
-    let v = valor.toString().trim().toUpperCase();
-    
-    if (v === "1" || v === "SI" || v === "SÍ") return 1;
-    if (v === "0" || v === "NO") return 0;
-    
-    return -1; // -1 significa que no se sabe o está vacío
-}
-
+// --- CARGA DE DATOS ---
 async function cargarBaseDatos() {
     try {
-        const respuesta = await fetch(CSV_FILE); // Carga el archivo local
+        const respuesta = await fetch(CSV_FILE);
+        if (!respuesta.ok) throw new Error("No se pudo cargar " + CSV_FILE);
+        
         const texto = await respuesta.text();
-        const lineas = texto.split("\n").map(l => l.replace("\r", "").trim()).filter(l => l.length > 0);
+        const lineas = texto.split("\n").map(l => l.trim()).filter(l => l.length > 0);
         
-        if (lineas.length === 0) return;
-
-        const primeraLinea = lineas[0];
-        const separador = primeraLinea.includes(";") ? ";" : ",";
+        // Detectar si es coma o punto y coma
+        const separador = lineas[0].includes(";") ? ";" : ",";
         
-        const cabecera = primeraLinea.split(separador);
-        columnasPreguntas = cabecera.slice(5).map(col => limpiarTexto(col)); 
-
-        console.log("Cabeceras de preguntas detectadas en Sheets:", columnasPreguntas);
-
         jugadores = [];
         for(let i = 1; i < lineas.length; i++) {
             const c = lineas[i].split(separador);
             if(c.length < 5) continue;
 
             let jugador = {
-                id: c[0].trim(),
-                nombre: c[1].trim(),
-                foto: c[2].trim(),
-                equipo: c[3].trim(),
-                nacionalidad: c[4].trim(),
-                atributos: {}
+                id: c[0].trim(), nombre: c[1].trim(), foto: c[2].trim(),
+                equipo: c[3].trim(), nacionalidad: c[4].trim(), atributos: {}
             };
 
             for(let j = 0; j < columnasPreguntas.length; j++) {
-                let valorCelda = c[j + 5];
-                let claveAtributo = columnasPreguntas[j];
-                jugador.atributos[claveAtributo] = parsearValorCelda(valorCelda);
+                let valor = c[j + 5] ? c[j + 5].trim() : "0";
+                jugador.atributos[columnasPreguntas[j]] = parseInt(valor) || 0;
             }
             jugadores.push(jugador);
         }
-        console.log("Base de datos cargada con éxito. Jugadores totales:", jugadores.length);
+        console.log("Base de datos cargada. Jugadores:", jugadores.length);
+        iniciarJuego();
     } catch (e) {
-        console.error("Error al cargar la base de datos", e);
-        document.getElementById("texto-pregunta").innerText = "⚠️ Error al conectar con la base de datos de AkiMessi.";
+        console.error("Error al cargar:", e);
+        document.getElementById("texto-pregunta").innerText = "⚠️ Error al conectar con la base de datos.";
     }
 }
 
+// --- LÓGICA DE JUEGO ---
 function iniciarJuego() {
-    if (jugadores.length === 0) {
-        document.getElementById("texto-pregunta").innerText = "⚠️ No se han podido cargar futbolistas de Google Sheets.";
-        return;
-    }
-    
+    if (jugadores.length === 0) return;
     respuestasUsuario = {};
     numeroPregunta = 1;
-    juegoIniciado = true; 
-    document.getElementById("pantalla-juego").classList.remove("ronda-dorada");
-    document.getElementById("imagen-messi").src = "img/messi_genio.png";
-    hacerSiguientePregunta();
-}
-
-function hacerSiguientePregunta() {
-    // 1. Filtrar los candidatos activos
-    let candidatosActivos = jugadores.filter(j => {
-        for (let attr in respuestasUsuario) {
-            let resEsperada = j.atributos[attr];
-            let resDada = respuestasUsuario[attr];
-            
-            if (resDada === 1 || resDada === 0) {
-                if (resEsperada !== -1 && resEsperada !== resDada) {
-                    return false; // Descartado
-                }
-            }
-        }
-        return true;
-    });
-
-    console.log(`Pregunta ${numeroPregunta} | Candidatos restantes: ${candidatosActivos.length}`);
-    
-    // Si solo queda un candidato, ¡adivinamos inmediatamente!
-    if (candidatosActivos.length === 1) {
-        adivinarJugador(candidatosActivos[0]);
-        return;
-    }
-
-    // Si nos quedamos sin candidatos en absoluto
-    if (candidatosActivos.length === 0) {
-        adivinarJugador(null);
-        return;
-    }
-
-    // Si ya pasamos la ronda 10, adivinamos con el que mejor punteo tenga de la lista restante
-    if (numeroPregunta > 10) {
-        adivinarJugador(candidatosActivos[0]);
-        return;
-    }
-
-    if (numeroPregunta === 10) {
-        document.getElementById("pantalla-juego").classList.add("ronda-dorada");
-        document.getElementById("imagen-messi").src = "img/messi_oro.png";
-        document.getElementById("contador-preguntas").innerText = "🏆 PREGUNTA DE ORO 🏆";
-    }
-
-    // 2. Elegir la mejor pregunta
-    let mejorAtributo = elegirMejorAtributo(candidatosActivos);
-    
-    // Salvaguarda: si no encuentra una pregunta ideal pero quedan muchos candidatos, agarra cualquier pregunta restante
-    if (!mejorAtributo) {
-        mejorAtributo = columnasPreguntas.find(attr => respuestasUsuario[attr] === undefined);
-    }
-
-    // Si de verdad ya no quedan más preguntas disponibles en la base de datos
-    if (!mejorAtributo) {
-        adivinarJugador(candidatosActivos[0]);
-        return;
-    }
-
-    atributoActual = mejorAtributo;
-    let textoMostrar = traducirAtributoAPregunta(mejorAtributo);
-    
-    if (numeroPregunta === 10) {
-        document.getElementById("texto-pregunta").innerText = `¡Última oportunidad! ${textoMostrar}`;
-    } else {
-        document.getElementById("texto-pregunta").innerText = textoMostrar;
-        document.getElementById("contador-preguntas").innerText = `Pregunta Nº ${numeroPregunta}`;
-    }
-}
-
-function elegirMejorAtributo(listaCandidatos) {
-    let mejorAttr = null;
-    let mejorDiferencia = Infinity;
-
-    columnasPreguntas.forEach(attr => {
-        if (respuestasUsuario[attr] !== undefined) return;
-
-        let conSueldoDeSies = listaCandidatos.filter(j => j.atributos[attr] === 1).length;
-        let conSueldoDeNoes = listaCandidatos.filter(j => j.atributos[attr] === 0).length;
-
-        // Buscamos que divida lo más equilibrado posible (lo más cercano a diferencia 0)
-        let diferencia = Math.abs(conSueldoDeSies - conSueldoDeNoes);
-        
-        // Solo la tomamos en cuenta si realmente ayuda a dividir el grupo activo
-        if (diferencia < mejorDiferencia && (conSueldoDeSies > 0 || conSueldoDeNoes > 0)) {
-            mejorDiferencia = diferencia;
-            mejorAttr = attr;
-        }
-    });
-
-    return mejorAttr;
-}
-
-function responder(valor) {
-    if (!juegoIniciado) {
-        iniciarJuego();
-        return;
-    }
-
-    respuestasUsuario[atributoActual] = valor;
-    numeroPregunta++;
+    juegoIniciado = true;
     hacerSiguientePregunta();
 }
 
@@ -228,18 +98,5 @@ function traducirAtributoAPregunta(attr) {
     return diccionario[attr] || `¿Tiene la característica: ${attr}?`;
 }
 
-function adivinarJugador(jugador) {
-    const imgElement = document.getElementById("imagen-messi");
-    if (jugador) {
-        document.getElementById("texto-pregunta").innerText = `¡YA SÉ QUIÊN ES! ¡Es ${jugador.nombre}! Que juega en ${jugador.equipo}. ¿A que te la gané, bobo?`;
-        
-        const rutaFoto = `img/futbolistas/${jugador.foto}`;
-        imgElement.src = rutaFoto;
-        imgElement.onerror = () => {
-            imgElement.src = "img/messi_genio.png";
-        };
-    } else {
-        document.getElementById("texto-pregunta").innerText = "¡Me amagaste bien! No encontré ningún futbolista con esas características... ¿Me estás mintiendo, bobo?";
-        imgElement.src = "img/messi_oro.png";
-    }
-}
+// Iniciar
+cargarBaseDatos();
