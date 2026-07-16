@@ -14,11 +14,20 @@ window.onload = async () => {
     await cargarBaseDatos();
 };
 
+// Función para limpiar textos de cabeceras (quita espacios, saltos de línea y caracteres raros)
+function limpiarTexto(texto) {
+    if (!texto) return "";
+    return texto.trim()
+                .replace(/[\r\n]+/g, "") // Elimina saltos de línea ocultos
+                .toUpperCase();
+}
+
 async function cargarBaseDatos() {
     try {
         const respuesta = await fetch(SHEET_CSV_URL);
         const texto = await respuesta.text();
-        const lineas = texto.split("\n").map(l => l.trim()).filter(l => l.length > 0);
+        // Separamos por líneas y limpiamos retornos de carro molestos de Windows (\r)
+        const lineas = texto.split("\n").map(l => l.replace("\r", "").trim()).filter(l => l.length > 0);
         
         if (lineas.length === 0) return;
 
@@ -26,14 +35,16 @@ async function cargarBaseDatos() {
         const primeraLinea = lineas[0];
         const separador = primeraLinea.includes(";") ? ";" : ",";
         
-        // Extraer cabecera usando el separador correcto
+        // Extraer cabecera usando el separador correcto y limpiando columnas
         const cabecera = primeraLinea.split(separador);
-        columnasPreguntas = cabecera.slice(5).map(col => col.trim().toUpperCase()); // Normalizar cabeceras a mayúsculas sin espacios
+        columnasPreguntas = cabecera.slice(5).map(col => limpiarTexto(col)); 
+
+        console.log("Cabeceras de preguntas detectadas:", columnasPreguntas);
 
         // Parsear filas de jugadores
+        jugadores = [];
         for(let i = 1; i < lineas.length; i++) {
             const c = lineas[i].split(separador);
-            // Solo exigimos que tenga al menos los 5 datos básicos de identificación
             if(c.length < 5) continue;
 
             let jugador = {
@@ -45,15 +56,16 @@ async function cargarBaseDatos() {
                 atributos: {}
             };
 
-            // Rellenar las características asegurándonos de que si falta alguna columna, use -1 (No lo sé)
+            // Rellenar las características
             for(let j = 0; j < columnasPreguntas.length; j++) {
                 let valorCelda = c[j + 5];
                 let valorParseado = parseInt(valorCelda);
-                jugador.atributos[columnasPreguntas[j]] = isNaN(valorParseado) ? -1 : valorParseado;
+                let claveAtributo = columnasPreguntas[j];
+                jugador.atributos[claveAtributo] = isNaN(valorParseado) ? -1 : valorParseado;
             }
             jugadores.push(jugador);
         }
-        console.log("Base de datos cargada con éxito. Jugadores:", jugadores.length);
+        console.log("Base de datos cargada con éxito. Jugadores totales:", jugadores.length);
     } catch (e) {
         console.error("Error al cargar la base de datos", e);
         document.getElementById("texto-pregunta").innerText = "⚠️ Error al conectar con la base de datos de AkiMessi.";
@@ -80,6 +92,7 @@ function hacerSiguientePregunta() {
         for (let attr in respuestasUsuario) {
             let resEsperada = j.atributos[attr];
             let resDada = respuestasUsuario[attr];
+            // Si el jugador tiene un valor válido (0 o 1) y no coincide con lo que dijo el usuario, se descarta
             if (resEsperada !== undefined && resEsperada !== -1 && resEsperada !== resDada) {
                 return false;
             }
@@ -87,7 +100,9 @@ function hacerSiguientePregunta() {
         return true;
     });
 
-    // ¡FIN DEL JUEGO! Si ya respondimos la pregunta 10 o si queda 1 solo jugador
+    console.log(`Pregunta ${numeroPregunta} - Candidatos restantes:`, candidatosActivos.length);
+
+    // Si ya respondimos la pregunta 10, o nos quedamos sin candidatos, o solo queda 1
     if (numeroPregunta > 10 || candidatosActivos.length <= 1) {
         adivinarJugador(candidatosActivos[0]);
         return;
@@ -194,13 +209,13 @@ function traducirAtributoAPregunta(attr) {
 function adivinarJugador(jugador) {
     const imgElement = document.getElementById("imagen-messi");
     if (jugador) {
-        document.getElementById("texto-pregunta").innerText = `¡YA SÉ QUIÉN ES! ¡Es ${jugador.nombre}! Que juega en ${jugador.equipo}. ¿A que te la gané, bobo?`;
+        document.getElementById("texto-pregunta").innerText = `¡YA SÉ QUIÊN ES! ¡Es ${jugador.nombre}! Que juega en ${jugador.equipo}. ¿A que te la gané, bobo?`;
         
-        // Carga segura de imagen: si no existe la foto del futbolista, mostramos a Messi genio de repuesto
+        // Intentar cargar la foto del jugador, si falla o no está, dejamos a Messi Genio
         const rutaFoto = `img/futbolistas/${jugador.foto}`;
         imgElement.src = rutaFoto;
         imgElement.onerror = () => {
-            imgElement.src = "img/messi_genio.png"; // Si falla, mostramos a Messi y evitamos la imagen rota
+            imgElement.src = "img/messi_genio.png";
         };
     } else {
         document.getElementById("texto-pregunta").innerText = "¡Me amagaste bien! No encontré ningún futbolista con esas características... ¿Me estás mintiendo, bobo?";
