@@ -7,7 +7,7 @@ let columnasPreguntas = [];
 let respuestasUsuario = {};
 let numeroPregunta = 1;
 let atributoActual = "";
-let juegoIniciado = false; // Nueva variable para controlar la pantalla de bienvenida
+let juegoIniciado = false; 
 
 // Cargar la base de datos de inmediato al abrir la aplicación
 window.onload = async () => {
@@ -28,7 +28,7 @@ async function cargarBaseDatos() {
         
         // Extraer cabecera usando el separador correcto
         const cabecera = primeraLinea.split(separador);
-        columnasPreguntas = cabecera.slice(5); // Las preguntas empiezan desde la sexta columna (ZURDO)
+        columnasPreguntas = cabecera.slice(5).map(col => col.trim().toUpperCase()); // Normalizar cabeceras a mayúsculas sin espacios
 
         // Parsear filas de jugadores
         for(let i = 1; i < lineas.length; i++) {
@@ -37,11 +37,11 @@ async function cargarBaseDatos() {
             if(c.length < 5) continue;
 
             let jugador = {
-                id: c[0],
-                nombre: c[1],
-                foto: c[2],
-                equipo: c[3],
-                nacionalidad: c[4],
+                id: c[0].trim(),
+                nombre: c[1].trim(),
+                foto: c[2].trim(),
+                equipo: c[3].trim(),
+                nacionalidad: c[4].trim(),
                 atributos: {}
             };
 
@@ -61,7 +61,6 @@ async function cargarBaseDatos() {
 }
 
 function iniciarJuego() {
-    // SEGURO DE CARGA: Si no hay jugadores cargados, avisamos en pantalla para no congelar el juego
     if (jugadores.length === 0) {
         document.getElementById("texto-pregunta").innerText = "⚠️ No se han podido cargar futbolistas de Google Sheets. Verifica que el enlace esté publicado correctamente.";
         return;
@@ -69,7 +68,7 @@ function iniciarJuego() {
     
     respuestasUsuario = {};
     numeroPregunta = 1;
-    juegoIniciado = true; // El juego ha comenzado oficialmente
+    juegoIniciado = true; 
     document.getElementById("pantalla-juego").classList.remove("ronda-dorada");
     document.getElementById("imagen-messi").src = "img/messi_genio.png";
     hacerSiguientePregunta();
@@ -81,7 +80,7 @@ function hacerSiguientePregunta() {
         for (let attr in respuestasUsuario) {
             let resEsperada = j.atributos[attr];
             let resDada = respuestasUsuario[attr];
-            if (resEsperada !== -1 && resEsperada !== resDada) {
+            if (resEsperada !== undefined && resEsperada !== -1 && resEsperada !== resDada) {
                 return false;
             }
         }
@@ -101,7 +100,7 @@ function hacerSiguientePregunta() {
         document.getElementById("contador-preguntas").innerText = "🏆 PREGUNTA DE ORO 🏆";
     }
 
-    // 2. Elegir la mejor pregunta basándonos en la división de candidatos (entropía básica)
+    // 2. Elegir la mejor pregunta basándonos en la división de candidatos
     let mejorAtributo = elegirMejorAtributo(candidatosActivos);
     
     if (!mejorAtributo) {
@@ -132,7 +131,7 @@ function elegirMejorAtributo(listaCandidatos) {
         let conSueldoDeSies = listaCandidatos.filter(j => j.atributos[attr] === 1).length;
         let conSueldoDeNoes = listaCandidatos.filter(j => j.atributos[attr] === 0).length;
 
-        // Buscamos que la pregunta divida a los candidatos lo más cerca posible de la mitad (50/50)
+        // Buscamos la pregunta que divida a los candidatos lo más cerca posible de la mitad (50/50)
         let diferencia = Math.abs(conSueldoDeSies - conSueldoDeNoes);
         
         if (diferencia < mejorDiferencia) {
@@ -145,18 +144,14 @@ function elegirMejorAtributo(listaCandidatos) {
 }
 
 function responder(valor) {
-    // Si aún no hemos iniciado el juego (estamos en el saludo inicial),
-    // cualquier botón sirve para gatillar el inicio real del juego.
     if (!juegoIniciado) {
         iniciarJuego();
         return;
     }
 
     if (valor !== -1) {
-        // Guardamos si respondió SÍ (1) o NO (0)
         respuestasUsuario[atributoActual] = valor;
     }
-    // Si presionó NO LO SÉ (-1), simplemente saltamos la pregunta incrementando el contador
     numeroPregunta++;
     hacerSiguientePregunta();
 }
@@ -197,11 +192,18 @@ function traducirAtributoAPregunta(attr) {
 }
 
 function adivinarJugador(jugador) {
+    const imgElement = document.getElementById("imagen-messi");
     if (jugador) {
         document.getElementById("texto-pregunta").innerText = `¡YA SÉ QUIÉN ES! ¡Es ${jugador.nombre}! Que juega en ${jugador.equipo}. ¿A que te la gané, bobo?`;
-        document.getElementById("imagen-messi").src = `img/futbolistas/${jugador.foto}`;
+        
+        // Carga segura de imagen: si no existe la foto del futbolista, mostramos a Messi genio de repuesto
+        const rutaFoto = `img/futbolistas/${jugador.foto}`;
+        imgElement.src = rutaFoto;
+        imgElement.onerror = () => {
+            imgElement.src = "img/messi_genio.png"; // Si falla, mostramos a Messi y evitamos la imagen rota
+        };
     } else {
         document.getElementById("texto-pregunta").innerText = "¡Me amagaste bien! No encontré ningún futbolista con esas características... ¿Me estás mintiendo, bobo?";
-        document.getElementById("imagen-messi").src = "img/messi_oro.png";
+        imgElement.src = "img/messi_oro.png";
     }
 }
