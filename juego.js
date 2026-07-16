@@ -14,7 +14,6 @@ window.onload = async () => {
     await cargarBaseDatos();
 };
 
-// Función para limpiar textos de cabeceras (quita espacios y saltos de línea)
 function limpiarTexto(texto) {
     if (!texto) return "";
     return texto.trim()
@@ -22,21 +21,14 @@ function limpiarTexto(texto) {
                 .toUpperCase();
 }
 
-// Convierte celdas de Sheets (1, 0, SI, SÍ, NO, etc.) a formato estándar (1, 0, o -1)
 function parsearValorCelda(valor) {
-    if (!valor) return -1;
-    let v = valor.trim().toUpperCase();
+    if (valor === undefined || valor === null) return -1;
+    let v = valor.toString().trim().toUpperCase();
     
-    // Si es un número escrito como texto ("1" o "0")
-    if (v === "1") return 1;
-    if (v === "0") return 0;
+    if (v === "1" || v === "SI" || v === "SÍ") return 1;
+    if (v === "0" || v === "NO") return 0;
     
-    // Si está escrito con letras
-    if (v === "SI" || v === "SÍ") return 1;
-    if (v === "NO") return 0;
-    
-    // Cualquier otra cosa o vacío se considera "No lo sé"
-    return -1;
+    return -1; // -1 significa que no se sabe o está vacío
 }
 
 async function cargarBaseDatos() {
@@ -47,17 +39,14 @@ async function cargarBaseDatos() {
         
         if (lineas.length === 0) return;
 
-        // DETECTAR SEPARADOR: ¿Coma (,) o Punto y coma (;)?
         const primeraLinea = lineas[0];
         const separador = primeraLinea.includes(";") ? ";" : ",";
         
-        // Extraer cabeceras limpias
         const cabecera = primeraLinea.split(separador);
         columnasPreguntas = cabecera.slice(5).map(col => limpiarTexto(col)); 
 
         console.log("Cabeceras de preguntas detectadas:", columnasPreguntas);
 
-        // Parsear filas de jugadores
         jugadores = [];
         for(let i = 1; i < lineas.length; i++) {
             const c = lineas[i].split(separador);
@@ -72,7 +61,6 @@ async function cargarBaseDatos() {
                 atributos: {}
             };
 
-            // Rellenar las características usando el nuevo parseador inteligente
             for(let j = 0; j < columnasPreguntas.length; j++) {
                 let valorCelda = c[j + 5];
                 let claveAtributo = columnasPreguntas[j];
@@ -81,7 +69,7 @@ async function cargarBaseDatos() {
             jugadores.push(jugador);
         }
         console.log("Base de datos cargada con éxito. Jugadores totales:", jugadores.length);
-        console.log("Ejemplo de primer jugador parseado:", jugadores[0]); // Esto nos ayudará a ver si lee bien las características
+        console.log("Ejemplo de primer jugador parseado:", jugadores[0]);
     } catch (e) {
         console.error("Error al cargar la base de datos", e);
         document.getElementById("texto-pregunta").innerText = "⚠️ Error al conectar con la base de datos de AkiMessi.";
@@ -90,7 +78,7 @@ async function cargarBaseDatos() {
 
 function iniciarJuego() {
     if (jugadores.length === 0) {
-        document.getElementById("texto-pregunta").innerText = "⚠️ No se han podido cargar futbolistas de Google Sheets. Verifica que el enlace esté publicado correctamente.";
+        document.getElementById("texto-pregunta").innerText = "⚠️ No se han podido cargar futbolistas de Google Sheets.";
         return;
     }
     
@@ -108,30 +96,34 @@ function hacerSiguientePregunta() {
         for (let attr in respuestasUsuario) {
             let resEsperada = j.atributos[attr];
             let resDada = respuestasUsuario[attr];
-            // Si el jugador tiene un valor válido (0 o 1) y no coincide con lo que dijo el usuario, se descarta
-            if (resEsperada !== undefined && resEsperada !== -1 && resEsperada !== resDada) {
-                return false;
+            
+            // Si el usuario contestó SÍ (1) o NO (0) a una pregunta...
+            if (resDada === 1 || resDada === 0) {
+                // ...y el jugador tiene cargado un valor diferente (y que no sea "no lo sé" / -1)
+                if (resEsperada !== -1 && resEsperada !== resDada) {
+                    return false; // Descartado
+                }
             }
         }
         return true;
     });
 
-    console.log(`Pregunta ${numeroPregunta} | Candidatos restantes:`, candidatosActivos.length);
+    console.log(`Pregunta ${numeroPregunta} | Candidatos restantes: ${candidatosActivos.length}`);
+    console.log("Candidatos que siguen en juego:", candidatosActivos.map(j => j.nombre));
 
-    // Si ya respondimos la pregunta 10, o nos quedamos sin candidatos, o solo queda 1
-    if (numeroPregunta > 10 || candidatosActivos.length <= 1) {
+    // Si nos quedamos sin candidatos o solo queda 1, adivinamos
+    if (candidatosActivos.length <= 1 || numeroPregunta > 10) {
         adivinarJugador(candidatosActivos[0]);
         return;
     }
 
-    // Activar el modo "PREGUNTA DE ORO" justo en la ronda 10
     if (numeroPregunta === 10) {
         document.getElementById("pantalla-juego").classList.add("ronda-dorada");
         document.getElementById("imagen-messi").src = "img/messi_oro.png";
         document.getElementById("contador-preguntas").innerText = "🏆 PREGUNTA DE ORO 🏆";
     }
 
-    // 2. Elegir la mejor pregunta basándonos en la división de candidatos
+    // 2. Elegir la mejor pregunta
     let mejorAtributo = elegirMejorAtributo(candidatosActivos);
     
     if (!mejorAtributo) {
@@ -142,7 +134,6 @@ function hacerSiguientePregunta() {
     atributoActual = mejorAtributo;
     let textoMostrar = traducirAtributoAPregunta(mejorAtributo);
     
-    // Cambiar texto de pregunta e indicador según la ronda
     if (numeroPregunta === 10) {
         document.getElementById("texto-pregunta").innerText = `¡Última oportunidad! ${textoMostrar}`;
     } else {
@@ -156,13 +147,11 @@ function elegirMejorAtributo(listaCandidatos) {
     let mejorDiferencia = Infinity;
 
     columnasPreguntas.forEach(attr => {
-        // Ignorar atributos que ya se han preguntado
         if (respuestasUsuario[attr] !== undefined) return;
 
         let conSueldoDeSies = listaCandidatos.filter(j => j.atributos[attr] === 1).length;
         let conSueldoDeNoes = listaCandidatos.filter(j => j.atributos[attr] === 0).length;
 
-        // Buscamos la pregunta que divida a los candidatos lo más cerca posible de la mitad (50/50)
         let diferencia = Math.abs(conSueldoDeSies - conSueldoDeNoes);
         
         if (diferencia < mejorDiferencia) {
@@ -180,9 +169,7 @@ function responder(valor) {
         return;
     }
 
-    if (valor !== -1) {
-        respuestasUsuario[atributoActual] = valor;
-    }
+    respuestasUsuario[atributoActual] = valor;
     numeroPregunta++;
     hacerSiguientePregunta();
 }
