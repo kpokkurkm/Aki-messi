@@ -4,17 +4,14 @@ const SHEET_CSV_URL = `${BASE_URL}&t=${new Date().getTime()}`;
 
 let jugadores = [];
 let columnasPreguntas = [];
-// ... todo el resto de tu código igual hacia abajo ...
-let jugadores = [];
-let columnasPreguntas = [];
 let respuestasUsuario = {};
 let numeroPregunta = 1;
 let atributoActual = "";
+let juegoIniciado = false; // Controla si ya pasamos la pantalla de bienvenida
 
 // Cargar la base de datos de inmediato al abrir la aplicación
 window.onload = async () => {
     await cargarBaseDatos();
-    iniciarJuego();
 };
 
 async function cargarBaseDatos() {
@@ -72,6 +69,7 @@ function iniciarJuego() {
     
     respuestasUsuario = {};
     numeroPregunta = 1;
+    juegoIniciado = true; // El juego ya comenzó de verdad
     document.getElementById("pantalla-juego").classList.remove("ronda-dorada");
     document.getElementById("imagen-messi").src = "img/messi_genio.png";
     hacerSiguientePregunta();
@@ -148,6 +146,13 @@ function elegirMejorAtributo(listaCandidatos) {
 }
 
 function responder(valor) {
+    // Si aún no hemos iniciado (estamos en el saludo "Pensá en un futbolista..."), 
+    // cualquier botón sirve para arrancar el juego.
+    if (!juegoIniciado) {
+        iniciarJuego();
+        return;
+    }
+
     if (valor !== -1) {
         // Guardamos si respondió SÍ (1) o NO (0)
         respuestasUsuario[atributoActual] = valor;
