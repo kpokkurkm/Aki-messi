@@ -18,16 +18,21 @@ const columnasPreguntas = [
 // --- CARGA DE DATOS ---
 async function cargarBaseDatos() {
     try {
+        console.log("Iniciando carga de datos desde:", CSV_URL);
         const respuesta = await fetch(CSV_URL);
-        if (!respuesta.ok) throw new Error("No se pudo conectar con Google Sheets");
+        if (!respuesta.ok) throw new Error("Error en la respuesta del servidor: " + respuesta.status);
         
         const texto = await respuesta.text();
         const lineas = texto.split("\n").map(l => l.trim()).filter(l => l.length > 0);
+        console.log("Líneas cargadas:", lineas.length);
         
         jugadores = [];
         for(let i = 1; i < lineas.length; i++) {
             const c = lineas[i].split(","); 
-            if(c.length < 5) continue;
+            if(c.length < 5) {
+                console.warn("Línea ignorada por formato incorrecto (menos de 5 columnas):", lineas[i]);
+                continue;
+            }
 
             let jugador = {
                 id: c[0].trim(), nombre: c[1].trim(), foto: c[2].trim(),
@@ -40,11 +45,11 @@ async function cargarBaseDatos() {
             }
             jugadores.push(jugador);
         }
-        console.log("Datos cargados correctamente. Jugadores:", jugadores.length);
+        console.log("Base de datos cargada con éxito. Total jugadores:", jugadores.length);
         iniciarJuego();
     } catch (e) {
-        console.error("Error al cargar:", e);
-        document.getElementById("texto-pregunta").innerText = "⚠️ Error al conectar con la base de datos.";
+        console.error("Error crítico al cargar la base de datos:", e);
+        document.getElementById("texto-pregunta").innerText = "⚠️ Error al conectar con la base de datos: " + e.message;
     }
 }
 
@@ -55,24 +60,29 @@ function iniciarJuego() {
     candidatos = [...jugadores]; 
     numeroPregunta = 1;
     juegoIniciado = true;
+    console.log("Juego iniciado. Candidatos iniciales:", candidatos.length);
     hacerSiguientePregunta();
 }
 
 function hacerSiguientePregunta() {
-    // Si quedan candidatos, buscamos un atributo que no hayamos preguntado todavía
     let atributosPendientes = columnasPreguntas.filter(a => !(a in respuestasUsuario));
     
-    if (candidatos.length === 0 || atributosPendientes.length === 0) {
-        document.getElementById("texto-pregunta").innerText = "¡Me he quedado sin opciones o no conozco a ese jugador!";
+    if (candidatos.length === 0) {
+        document.getElementById("texto-pregunta").innerText = "¡No encontré a nadie con esas características!";
         return;
     }
     
-    // Elegimos el primer atributo disponible de la lista
+    if (atributosPendientes.length === 0) {
+        document.getElementById("texto-pregunta").innerText = "¡He agotado las preguntas y no estoy seguro!";
+        return;
+    }
+    
     atributoActual = atributosPendientes[0];
     const textoPregunta = traducirAtributoAPregunta(atributoActual);
     
     document.getElementById("texto-pregunta").innerText = textoPregunta;
-    document.getElementById("marcador-superior").innerText = "PREGUNTA N° " + numeroPregunta;
+    document.getElementById("contador-preguntas").innerText = "Pregunta Nº " + numeroPregunta;
+    console.log("Pregunta", numeroPregunta, ":", atributoActual, "| Candidatos restantes:", candidatos.length);
 }
 
 function traducirAtributoAPregunta(attr) {
@@ -115,18 +125,21 @@ function traducirAtributoAPregunta(attr) {
 
 // --- LÓGICA DE RESPUESTA ---
 function responder(valor) {
-    // Convertimos a número para asegurar la comparación
     const valorNumerico = parseInt(valor);
+    console.log("Respuesta recibida:", valorNumerico, "para atributo:", atributoActual);
+
+    // Solo filtramos si la respuesta es SÍ o NO (1 o 0)
+    if (valorNumerico !== -1) {
+        candidatos = candidatos.filter(jugador => {
+            const valorAtributo = parseInt(jugador.atributos[atributoActual]);
+            return valorAtributo === valorNumerico;
+        });
+        console.log("Candidatos tras filtrar:", candidatos.length);
+    }
     
-    // Filtramos comparando valores numéricos
-    candidatos = candidatos.filter(jugador => {
-        const valorAtributo = parseInt(jugador.atributos[atributoActual]);
-        return valorAtributo === valorNumerico;
-    });
-    
-    console.log("Atributo filtrado:", atributoActual, "Valor:", valorNumerico);
-    console.log("Candidatos restantes:", candidatos.length);
-    
+    // Guardamos la respuesta para no repetir atributo
+    respuestasUsuario[atributoActual] = valorNumerico;
+
     // Si encontramos al jugador
     if (candidatos.length === 1) {
         document.getElementById("texto-pregunta").innerText = "¡Ya sé quién es! ¿Es " + candidatos[0].nombre + "?";
@@ -135,7 +148,7 @@ function responder(valor) {
 
     // Si nos quedamos sin candidatos
     if (candidatos.length === 0) {
-        document.getElementById("texto-pregunta").innerText = "No encontré a nadie con esas características. ¿Revisaste el Google Sheet?";
+        document.getElementById("texto-pregunta").innerText = "No encontré a nadie. ¿Revisaste el Google Sheet?";
         return;
     }
     
@@ -143,5 +156,4 @@ function responder(valor) {
     hacerSiguientePregunta();
 }
 
-// Iniciar proceso
 cargarBaseDatos();
