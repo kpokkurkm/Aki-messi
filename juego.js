@@ -126,29 +126,33 @@ function traducirAtributoAPregunta(attr) {
 // --- LÓGICA DE RESPUESTA ---
 function responder(valor) {
     const valorNumerico = parseInt(valor);
-    console.log("Respuesta recibida:", valorNumerico, "para atributo:", atributoActual);
+    console.log("--- FILTRO ---");
+    console.log("Atributo actual:", atributoActual);
+    console.log("Respuesta usuario (esperado):", valorNumerico);
 
-    // Solo filtramos si la respuesta es SÍ o NO (1 o 0)
     if (valorNumerico !== -1) {
         candidatos = candidatos.filter(jugador => {
             const valorAtributo = parseInt(jugador.atributos[atributoActual]);
+            
+            // LOG DE SEGURIDAD PARA VER POR QUÉ SE VA PELÉ
+            if (jugador.nombre.includes("Pele")) {
+                console.log("Evaluando a Pele:", "Valor CSV:", valorAtributo, "¿Coincide?", valorAtributo === valorNumerico);
+            }
+            
             return valorAtributo === valorNumerico;
         });
-        console.log("Candidatos tras filtrar:", candidatos.length);
+        console.log("Candidatos restantes tras filtrar:", candidatos.length);
     }
     
-    // Guardamos la respuesta para no repetir atributo
     respuestasUsuario[atributoActual] = valorNumerico;
 
-    // Si encontramos al jugador
     if (candidatos.length === 1) {
         document.getElementById("texto-pregunta").innerText = "¡Ya sé quién es! ¿Es " + candidatos[0].nombre + "?";
         return;
     }
 
-    // Si nos quedamos sin candidatos
     if (candidatos.length === 0) {
-        document.getElementById("texto-pregunta").innerText = "No encontré a nadie. ¿Revisaste el Google Sheet?";
+        document.getElementById("texto-pregunta").innerText = "No encontré a nadie. Revisa consola (F12).";
         return;
     }
     
