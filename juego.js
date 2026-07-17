@@ -110,6 +110,29 @@ function traducirAtributoAPregunta(attr) {
     };
     return diccionario[attr] || `¿Tiene la característica: ${attr}?`;
 }
+// --- LÓGICA DE RESPUESTA ---
+function responder(valor) {
+    // Guardamos la respuesta del usuario para el atributo actual
+    respuestasUsuario[atributoActual] = valor;
+    
+    // Pasamos a la siguiente pregunta
+    numeroPregunta++;
+    
+    // Si todavía quedan preguntas, hacemos la siguiente
+    if (numeroPregunta <= columnasPreguntas.length) {
+        hacerSiguientePregunta();
+    } else {
+        // Si ya no quedan, el juego terminó (aquí podrías filtrar a los jugadores)
+        document.getElementById("texto-pregunta").innerText = "¡He terminado! Voy a procesar tus respuestas...";
+        filtrarJugadores();
+    }
+}
+
+function filtrarJugadores() {
+    // Aquí puedes añadir la lógica para comparar las respuestasUsuario 
+    // con los atributos de cada jugador en tu lista.
+    console.log("Respuestas finales:", respuestasUsuario);
+}
 
 // Iniciar proceso
 cargarBaseDatos();
