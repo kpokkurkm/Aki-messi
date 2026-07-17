@@ -8,12 +8,12 @@
 </head>
 <body>
     <div id="pantalla-juego" class="contenedor-juego">
-        <!-- Marcador superior temporal -->
-        <div class="marcador-superior">
+        <!-- Marcador superior corregido con ID -->
+        <div id="marcador-superior" class="marcador-superior">
             <span id="contador-preguntas">Pregunta Nº 1</span>
         </div>
 
-        <!-- Campo de fútbol de fondo con la línea divisoria -->
+        <!-- Campo de fútbol de fondo -->
         <div class="campo-futbol">
             <div class="linea-medio"></div>
         </div>
@@ -21,12 +21,13 @@
         <!-- Contenedor del Genio y su Bocadillo -->
         <div class="personaje-contenedor">
             <div class="bocadillo-charla" id="bocadillo">
+                <!-- ID texto-pregunta coincide con el JS -->
                 <p id="texto-pregunta">¡Hola! Pensá en un futbolista... ¿Qué adivinás, bobo?</p>
             </div>
             <img src="img/messi_genio.png" id="imagen-messi" alt="AkiMessi Genio">
         </div>
 
-        <!-- Panel de botones inferior -->
+        <!-- Panel de botones -->
         <div class="botones-contenedor">
             <div class="fila-botones">
                 <button class="btn btn-si" onclick="responder(1)">SÍ</button>
