@@ -5,9 +5,8 @@ let respuestasUsuario = {};
 let numeroPregunta = 1;
 let juegoIniciado = false;
 let atributoActual = "";
-let candidatos = []; // Mantenemos la lista de candidatos
+let candidatos = []; 
 
-// Lista de columnas que definen tus preguntas
 const columnasPreguntas = [
     "ZURDO", "RETIRADO", "SUB_21", "PORTERO", "DEFENSA", "CENTROCAMPISTA", "DELANTERO",
     "EUROPA", "EUROPA_HISTORICO", "AFRICA", "AMERICA_NORTE", "AMERICA_SUR", "OCEANIA", "ASIA",
@@ -53,25 +52,27 @@ async function cargarBaseDatos() {
 function iniciarJuego() {
     if (jugadores.length === 0) return;
     respuestasUsuario = {};
-    candidatos = [...jugadores]; // Inicializamos los candidatos
+    candidatos = [...jugadores]; 
     numeroPregunta = 1;
     juegoIniciado = true;
     hacerSiguientePregunta();
 }
 
 function hacerSiguientePregunta() {
-    if (numeroPregunta > columnasPreguntas.length) {
-        document.getElementById("texto-pregunta").innerText = "¡He terminado mis preguntas!";
+    // Si quedan candidatos, buscamos un atributo que no hayamos preguntado todavía
+    let atributosPendientes = columnasPreguntas.filter(a => !(a in respuestasUsuario));
+    
+    if (candidatos.length === 0 || atributosPendientes.length === 0) {
+        document.getElementById("texto-pregunta").innerText = "¡Me he quedado sin opciones o no conozco a ese jugador!";
         return;
     }
     
-    atributoActual = columnasPreguntas[numeroPregunta - 1];
+    // Elegimos el primer atributo disponible de la lista
+    atributoActual = atributosPendientes[0];
     const textoPregunta = traducirAtributoAPregunta(atributoActual);
     
     document.getElementById("texto-pregunta").innerText = textoPregunta;
     document.getElementById("marcador-superior").innerText = "PREGUNTA N° " + numeroPregunta;
-    
-    console.log("Pregunta " + numeroPregunta + ": " + atributoActual);
 }
 
 function traducirAtributoAPregunta(attr) {
@@ -114,37 +115,26 @@ function traducirAtributoAPregunta(attr) {
 
 // --- LÓGICA DE RESPUESTA ---
 function responder(valor) {
-    // 1. Guardamos respuesta
     respuestasUsuario[atributoActual] = valor;
     
-    // 2. Filtramos candidatos basándonos en la respuesta
+    // Filtramos
     candidatos = candidatos.filter(jugador => jugador.atributos[atributoActual] == valor);
     
-    console.log("Candidatos restantes:", candidatos.length);
-
-    // 3. Verificamos si queda solo uno
+    // Si encontramos al jugador, paramos
     if (candidatos.length === 1) {
-        document.getElementById("texto-pregunta").innerText = "¡Creo que ya sé quién es! ¿Es " + candidatos[0].nombre + "?";
+        document.getElementById("texto-pregunta").innerText = "¡Ya sé quién es! ¿Es " + candidatos[0].nombre + "?";
         return;
     }
 
+    // Si nos quedamos sin candidatos, avisamos
     if (candidatos.length === 0) {
-        document.getElementById("texto-pregunta").innerText = "No encontré a nadie con esas características.";
+        document.getElementById("texto-pregunta").innerText = "No encontré a nadie con esas características. ¿Seguro que marcaste bien los datos en el Excel?";
         return;
     }
     
-    // 4. Pasamos a la siguiente pregunta
+    // Aumentamos el contador solo si seguimos jugando
     numeroPregunta++;
-    
-    if (numeroPregunta <= columnasPreguntas.length) {
-        hacerSiguientePregunta();
-    } else {
-        filtrarJugadores();
-    }
-}
-
-function filtrarJugadores() {
-    console.log("Respuestas finales:", respuestasUsuario);
+    hacerSiguientePregunta();
 }
 
 // Iniciar proceso
