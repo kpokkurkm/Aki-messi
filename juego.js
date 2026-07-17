@@ -5,6 +5,7 @@ let respuestasUsuario = {};
 let numeroPregunta = 1;
 let juegoIniciado = false;
 let atributoActual = "";
+let candidatos = []; // Mantenemos la lista de candidatos
 
 // Lista de columnas que definen tus preguntas
 const columnasPreguntas = [
@@ -52,12 +53,12 @@ async function cargarBaseDatos() {
 function iniciarJuego() {
     if (jugadores.length === 0) return;
     respuestasUsuario = {};
+    candidatos = [...jugadores]; // Inicializamos los candidatos
     numeroPregunta = 1;
     juegoIniciado = true;
     hacerSiguientePregunta();
 }
 
-// ESTA ES LA FUNCIÓN QUE FALTABA
 function hacerSiguientePregunta() {
     if (numeroPregunta > columnasPreguntas.length) {
         document.getElementById("texto-pregunta").innerText = "¡He terminado mis preguntas!";
@@ -110,27 +111,39 @@ function traducirAtributoAPregunta(attr) {
     };
     return diccionario[attr] || `¿Tiene la característica: ${attr}?`;
 }
+
 // --- LÓGICA DE RESPUESTA ---
 function responder(valor) {
-    // Guardamos la respuesta del usuario para el atributo actual
+    // 1. Guardamos respuesta
     respuestasUsuario[atributoActual] = valor;
     
-    // Pasamos a la siguiente pregunta
+    // 2. Filtramos candidatos basándonos en la respuesta
+    candidatos = candidatos.filter(jugador => jugador.atributos[atributoActual] == valor);
+    
+    console.log("Candidatos restantes:", candidatos.length);
+
+    // 3. Verificamos si queda solo uno
+    if (candidatos.length === 1) {
+        document.getElementById("texto-pregunta").innerText = "¡Creo que ya sé quién es! ¿Es " + candidatos[0].nombre + "?";
+        return;
+    }
+
+    if (candidatos.length === 0) {
+        document.getElementById("texto-pregunta").innerText = "No encontré a nadie con esas características.";
+        return;
+    }
+    
+    // 4. Pasamos a la siguiente pregunta
     numeroPregunta++;
     
-    // Si todavía quedan preguntas, hacemos la siguiente
     if (numeroPregunta <= columnasPreguntas.length) {
         hacerSiguientePregunta();
     } else {
-        // Si ya no quedan, el juego terminó (aquí podrías filtrar a los jugadores)
-        document.getElementById("texto-pregunta").innerText = "¡He terminado! Voy a procesar tus respuestas...";
         filtrarJugadores();
     }
 }
 
 function filtrarJugadores() {
-    // Aquí puedes añadir la lógica para comparar las respuestasUsuario 
-    // con los atributos de cada jugador en tu lista.
     console.log("Respuestas finales:", respuestasUsuario);
 }
 
