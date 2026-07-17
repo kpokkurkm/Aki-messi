@@ -115,24 +115,30 @@ function traducirAtributoAPregunta(attr) {
 
 // --- LÓGICA DE RESPUESTA ---
 function responder(valor) {
-    respuestasUsuario[atributoActual] = valor;
+    // Convertimos a número para asegurar la comparación
+    const valorNumerico = parseInt(valor);
     
-    // Filtramos
-    candidatos = candidatos.filter(jugador => jugador.atributos[atributoActual] == valor);
+    // Filtramos comparando valores numéricos
+    candidatos = candidatos.filter(jugador => {
+        const valorAtributo = parseInt(jugador.atributos[atributoActual]);
+        return valorAtributo === valorNumerico;
+    });
     
-    // Si encontramos al jugador, paramos
+    console.log("Atributo filtrado:", atributoActual, "Valor:", valorNumerico);
+    console.log("Candidatos restantes:", candidatos.length);
+    
+    // Si encontramos al jugador
     if (candidatos.length === 1) {
         document.getElementById("texto-pregunta").innerText = "¡Ya sé quién es! ¿Es " + candidatos[0].nombre + "?";
         return;
     }
 
-    // Si nos quedamos sin candidatos, avisamos
+    // Si nos quedamos sin candidatos
     if (candidatos.length === 0) {
-        document.getElementById("texto-pregunta").innerText = "No encontré a nadie con esas características. ¿Seguro que marcaste bien los datos en el Excel?";
+        document.getElementById("texto-pregunta").innerText = "No encontré a nadie con esas características. ¿Revisaste el Google Sheet?";
         return;
     }
     
-    // Aumentamos el contador solo si seguimos jugando
     numeroPregunta++;
     hacerSiguientePregunta();
 }
