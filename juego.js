@@ -25,9 +25,7 @@ async function cargarBaseDatos() {
         const lineas = texto.split("\n").map(l => l.trim()).filter(l => l.length > 0);
         
         jugadores = [];
-        // Empezamos en 1 para saltar la cabecera
         for(let i = 1; i < lineas.length; i++) {
-            // Google Sheets CSV suele usar comas
             const c = lineas[i].split(","); 
             if(c.length < 5) continue;
 
@@ -50,8 +48,6 @@ async function cargarBaseDatos() {
     }
 }
 
-// Iniciar al cargar
-cargarBaseDatos();
 // --- LÓGICA DE JUEGO ---
 function iniciarJuego() {
     if (jugadores.length === 0) return;
@@ -59,6 +55,22 @@ function iniciarJuego() {
     numeroPregunta = 1;
     juegoIniciado = true;
     hacerSiguientePregunta();
+}
+
+// ESTA ES LA FUNCIÓN QUE FALTABA
+function hacerSiguientePregunta() {
+    if (numeroPregunta > columnasPreguntas.length) {
+        document.getElementById("texto-pregunta").innerText = "¡He terminado mis preguntas!";
+        return;
+    }
+    
+    atributoActual = columnasPreguntas[numeroPregunta - 1];
+    const textoPregunta = traducirAtributoAPregunta(atributoActual);
+    
+    document.getElementById("texto-pregunta").innerText = textoPregunta;
+    document.getElementById("marcador-superior").innerText = "PREGUNTA N° " + numeroPregunta;
+    
+    console.log("Pregunta " + numeroPregunta + ": " + atributoActual);
 }
 
 function traducirAtributoAPregunta(attr) {
@@ -99,5 +111,5 @@ function traducirAtributoAPregunta(attr) {
     return diccionario[attr] || `¿Tiene la característica: ${attr}?`;
 }
 
-// Iniciar
+// Iniciar proceso
 cargarBaseDatos();
