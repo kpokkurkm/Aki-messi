@@ -46,10 +46,9 @@ async function cargarBaseDatos() {
             jugadores.push(jugador);
         }
 
-        // --- UBICACIÓN CORRECTA: Cargamos los jugadores de la IA después de procesar el CSV ---
+        // Cargar los jugadores aprendidos por la IA desde el almacenamiento local
         const jugadoresLocales = JSON.parse(localStorage.getItem("jugadores_ia")) || [];
         jugadores = [...jugadores, ...jugadoresLocales];
-        // -------------------------------------------------------------------------------------
 
         console.log("Base de datos cargada con éxito. Total jugadores:", jugadores.length);
         iniciarJuego();
@@ -70,11 +69,17 @@ function iniciarJuego() {
     hacerSiguientePregunta();
 }
 
+// --- NUEVA FUNCIÓN INTELIGENTE CON ALGORITMO AKINATOR ---
 function hacerSiguientePregunta() {
     let atributosPendientes = columnasPreguntas.filter(a => !(a in respuestasUsuario));
     
     if (candidatos.length === 0) {
-        document.getElementById("texto-pregunta").innerText = "¡No encontré a nadie con esas características!";
+        mostrarFormularioAprendizaje();
+        return;
+    }
+    
+    if (candidatos.length === 1) {
+        document.getElementById("texto-pregunta").innerText = "¡Ya sé quién es! ¿Es " + candidatos[0].nombre + "?";
         return;
     }
     
@@ -83,12 +88,44 @@ function hacerSiguientePregunta() {
         return;
     }
     
-    atributoActual = atributosPendientes[0];
+    let mejoresAtributos = [];
+    let menorDiferencia = Infinity;
+    
+    // Evaluamos qué pregunta divide mejor al grupo actual de candidatos
+    atributosPendientes.forEach(attr => {
+        let conAtributo = candidatos.filter(j => parseInt(j.atributos[attr]) === 1).length;
+        let sinAtributo = candidatos.length - conAtributo;
+        
+        // SI LA PREGUNTA NO APORTA NADA (ej: nadie es delantero o todos son europeos), SE IGNORA
+        if (conAtributo === 0 || sinAtributo === 0) {
+            return; 
+        }
+        
+        // Buscamos la que más se acerque a dividir 50/50 (diferencia más cercana a 0)
+        let diferencia = Math.abs(conAtributo - sinAtributo);
+        
+        if (diferencia < menorDiferencia) {
+            menorDiferencia = diferencia;
+            mejoresAtributos = [attr]; // Nueva mejor pregunta encontrada
+        } else if (diferencia === menorDiferencia) {
+            mejoresAtributos.push(attr); // Empate técnico
+        }
+    });
+    
+    // Si ninguna pregunta divide al grupo (todos los restantes tienen datos idénticos)
+    if (mejoresAtributos.length === 0) {
+        atributoActual = atributosPendientes[0];
+    } else {
+        // ALEATORIEDAD CON TIE-BREAKER: De las mejores preguntas posibles, elige una al azar
+        const indiceAleatorio = Math.floor(Math.random() * mejoresAtributos.length);
+        atributoActual = mejoresAtributos[indiceAleatorio];
+    }
+    
     const textoPregunta = traducirAtributoAPregunta(atributoActual);
     
     document.getElementById("texto-pregunta").innerText = textoPregunta;
     document.getElementById("contador-preguntas").innerText = "Pregunta Nº " + numeroPregunta;
-    console.log("Pregunta", numeroPregunta, ":", atributoActual, "| Candidatos restantes:", candidatos.length);
+    console.log(`Pregunta ${numeroPregunta}: ${atributoActual} | Candidatos restantes: ${candidatos.length}`);
 }
 
 function traducirAtributoAPregunta(attr) {
@@ -134,16 +171,11 @@ function responder(valor) {
     const valorNumerico = parseInt(valor);
     console.log("--- FILTRO ---");
     console.log("Atributo actual:", atributoActual);
-    console.log("Respuesta usuario (esperado):", valorNumerico);
+    console.log("Respuesta usuario:", valorNumerico);
 
     if (valorNumerico !== -1) {
         candidatos = candidatos.filter(jugador => {
             const valorAtributo = parseInt(jugador.atributos[atributoActual]);
-            
-            if (jugador.nombre.includes("Pele")) {
-                console.log("Evaluando a Pele:", "Valor CSV:", valorAtributo, "¿Coincide?", valorAtributo === valorNumerico);
-            }
-            
             return valorAtributo === valorNumerico;
         });
         console.log("Candidatos restantes tras filtrar:", candidatos.length);
@@ -165,8 +197,7 @@ function responder(valor) {
     hacerSiguientePregunta();
 }
 
-// --- NUEVAS FUNCIONES DE APRENDIZAJE IA ---
-
+// --- FUNCIONES DE APRENDIZAJE IA ---
 function mostrarFormularioAprendizaje() {
     document.getElementById("texto-pregunta").innerText = "¡Me rindo, che! No sé quién es... ¿En qué futbolista estabas pensando?";
     
@@ -219,5 +250,5 @@ function procesarAprendizaje() {
     `;
 }
 
-// Inicialización limpia de la app
+// Inicialización de la app
 cargarBaseDatos();
