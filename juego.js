@@ -22,7 +22,7 @@ const columnasPreguntas = [
 // --- CARGA DE DATOS ---
 async function cargarBaseDatos() {
     try {
-        console.log("Iniciando carga de datos desde:", CSV_URL);
+        console.log("[Base de Datos] Iniciando carga desde:", CSV_URL);
         const respuesta = await fetch(CSV_URL);
         if (!respuesta.ok) throw new Error("Error en la respuesta del servidor: " + respuesta.status);
         
@@ -49,10 +49,10 @@ async function cargarBaseDatos() {
         const jugadoresLocales = JSON.parse(localStorage.getItem("jugadores_ia")) || [];
         jugadores = [...jugadores, ...jugadoresLocales];
 
-        console.log("Base de datos cargada con éxito. Total jugadores:", jugadores.length);
+        console.log("[Base de Datos] Éxito. Total jugadores cargados:", jugadores.length);
         iniciarJuego();
     } catch (e) {
-        console.error("Error crítico al cargar la base de datos:", e);
+        console.error("[Base de Datos] Error crítico:", e);
         document.getElementById("texto-pregunta").innerText = "⚠️ Error al conectar con la base de datos: " + e.message;
     }
 }
@@ -65,27 +65,45 @@ function iniciarJuego() {
     numeroPregunta = 1;
     estadoJuego = "JUGANDO";
     jugadorAdivinado = null;
+    console.log("[Juego] Partida iniciada. Pool inicial de candidatos:", candidatos.length);
     hacerSiguientePregunta();
 }
 
 function hacerSiguientePregunta() {
-    let atributosPendientes = columnasPreguntas.filter(a => !(a in respuestasUsuario));
+    console.log(`\n--- [RONDA Nº ${numeroPregunta}] ---`);
+    console.log("[IA] Cantidad de candidatos en este turno:", candidatos.length);
+
+    // CRÍTICO: Si ya se respondió la pregunta 10, pasamos directo a resolver la partida
+    if (numeroPregunta > 10) {
+        console.log("[IA] ¡Límite alcanzado! Resolviendo partida con los mejores candidatos.");
+        if (candidatos.length > 0) {
+            proponerJugador(candidatos[0]);
+        } else {
+            mostrarFormularioAprendizaje();
+        }
+        return;
+    }
     
     if (candidatos.length === 0) {
+        console.log("[IA] Quedamos en 0 candidatos. Yendo a formulario de aprendizaje.");
         mostrarFormularioAprendizaje();
         return;
     }
     
     if (candidatos.length === 1) {
+        console.log("[IA] ¡Candidato único encontrado antes de tiempo!", candidatos[0].nombre);
         proponerJugador(candidatos[0]);
         return;
     }
     
+    let atributosPendientes = columnasPreguntas.filter(a => !(a in respuestasUsuario));
     if (atributosPendientes.length === 0) {
-        document.getElementById("texto-pregunta").innerText = "¡He agotado las preguntas y no estoy seguro!";
+        console.log("[IA] Sin más preguntas disponibles. Arriesgando con lo que queda.");
+        proponerJugador(candidatos[0]);
         return;
     }
     
+    // Algoritmo de descarte óptimo
     let mejoresAtributos = [];
     let menorDiferencia = Infinity;
     
@@ -112,13 +130,15 @@ function hacerSiguientePregunta() {
     }
     
     const textoPregunta = traducirAtributoAPregunta(atributoActual);
+    console.log(`[IA] Atributo seleccionado para preguntar: "${atributoActual}"`);
     
     // --- CONTROL VISUAL: PREGUNTA DE ORO (PREGUNTA 10) ---
     const imgGenio = document.querySelector(".genio-contenedor img") || document.querySelector("img");
     const contenedorPrincipal = document.body; 
     
     if (numeroPregunta === 10) {
-        if (imgGenio) imgGenio.src = "img/messi_oro.png"; // Ruta del Messi dorado actualizada
+        console.log("[Efecto Visual] ¡Activando modo Messi de Oro!");
+        if (imgGenio) imgGenio.src = "img/messi_oro.png"; 
         
         contenedorPrincipal.style.transition = "all 0.8s ease";
         contenedorPrincipal.style.background = "linear-gradient(135deg, #FFE259 0%, #FFA751 100%)";
@@ -135,8 +155,8 @@ function hacerSiguientePregunta() {
 function proponerJugador(jugador) {
     estadoJuego = "ADIVINANDO";
     jugadorAdivinado = jugador;
+    console.log("[IA] Proponiendo resolución final. Jugador:", jugador.nombre);
     
-    // Renderizado con la ruta del directorio img/futbolistas/
     document.getElementById("texto-pregunta").innerHTML = `
         <p style="margin-bottom: 12px;">¡Ya sé quién es! ¿Es <b>${jugador.nombre}</b>?</p>
         <img src="img/futbolistas/${jugador.foto}" onerror="this.src='img/futbolistas/generico.webp'" 
@@ -148,7 +168,6 @@ function traducirAtributoAPregunta(attr) {
     const diccionario = {
         "ZURDO": "¿Es zurdo para pegarle a la pelota?",
         "RETIRADO": "¿Ya se retiró y colgó los botines?",
-        "SUB_21": "¿Es un pibe de menos de 21 años?",
         "PORTERO": "¿Su posición es arquero / portero?",
         "DEFENSA": "¿Es un defensor rústico o de categoría?",
         "CENTROCAMPISTA": "¿Juega en el mediocampo repartiendo juego?",
@@ -185,25 +204,33 @@ function traducirAtributoAPregunta(attr) {
 // --- LÓGICA DE RESPUESTA ---
 function responder(valor) {
     const valorNumerico = parseInt(valor);
+    console.log(`[Usuario] Click botón valor: ${valorNumerico} (Buscando coincidencia exacta)`);
 
     if (estadoJuego === "ADIVINANDO") {
         if (valorNumerico === 1) {
             registrarVictoria();
         } else {
+            console.log("[Juego] La IA falló la predicción. Pasando a aprendizaje.");
             mostrarFormularioAprendizaje();
         }
         return;
     }
 
     if (valorNumerico !== -1) {
+        const cantidadAntes = candidatos.length;
+        
         candidatos = candidatos.filter(jugador => {
-            const valorAtributo = parseInt(jugador.atributos[atributoActual]);
+            const valorAtributo = parseInt(jugador.atributos[atributoActual]) || 0;
             return valorAtributo === valorNumerico;
         });
+        
+        console.log(`[Filtro Aplicado] Atributo: ${atributoActual} | Valor buscado: ${valorNumerico}`);
+        console.log(`[Filtro Aplicado] Candidatos antes: ${cantidadAntes} -> Candidatos restantes: ${candidatos.length}`);
+    } else {
+        console.log("[Filtro Saltado] El usuario respondió 'No lo sé' (-1). No se descartan jugadores.");
     }
     
     respuestasUsuario[atributoActual] = valorNumerico;
-    
     numeroPregunta++;
     hacerSiguientePregunta();
 }
@@ -211,6 +238,7 @@ function responder(valor) {
 // --- REGISTRAR VICTORIA Y HISTORIAL ---
 function registrarVictoria() {
     estadoJuego = "APRENDIENDO";
+    console.log("[Juego] ¡Victoria de la IA!");
     
     const historial = JSON.parse(localStorage.getItem("album_capturas")) || [];
     if (!historial.includes(jugadorAdivinado.nombre)) {
@@ -258,7 +286,7 @@ function procesarAprendizaje() {
     let nuevoJugador = {
         id: "local_" + Date.now(),
         nombre: nombreInput,
-        foto: "generico.webp", // Se guarda el nombre base y el renderizado le añade el prefijo correctamente
+        foto: "generico.webp", 
         equipo: "Personalizado",
         nacionalidad: "Desconocida",
         atributos: {}
@@ -275,6 +303,8 @@ function procesarAprendizaje() {
     const jugadoresLocales = JSON.parse(localStorage.getItem("jugadores_ia")) || [];
     jugadoresLocales.push(nuevoJugador);
     localStorage.setItem("jugadores_ia", JSON.stringify(jugadoresLocales));
+
+    console.log("[IA Aprendizaje] Nuevo jugador guardado localmente:", nombreInput);
 
     document.getElementById("texto-pregunta").innerText = `¡Espectacular! Ya guardé a ${nombreInput} en mi memoria. En la próxima partida no se me escapa.`;
     
