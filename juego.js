@@ -19,6 +19,12 @@ const columnasPreguntas = [
     "FICHAJE_CARO", "ENTRENADOR", "CALVO", "LEYENDA_90"
 ];
 
+// Función auxiliar para limpiar impurezas de Excel/Google Sheets
+function limpiarCelda(texto) {
+    if (!texto) return "";
+    return texto.trim().replace(/^["']|["']$/g, ''); // Quita espacios y comillas iniciales/finales
+}
+
 // --- CARGA DE DATOS ---
 async function cargarBaseDatos() {
     try {
@@ -35,12 +41,16 @@ async function cargarBaseDatos() {
             if(c.length < 5) continue;
 
             let jugador = {
-                id: c[0].trim(), nombre: c[1].trim(), foto: c[2].trim(),
-                equipo: c[3].trim(), nacionalidad: c[4].trim(), atributos: {}
+                id: limpiarCelda(c[0]), 
+                nombre: limpiarCelda(c[1]), 
+                foto: limpiarCelda(c[2]),
+                equipo: limpiarCelda(c[3]), 
+                nacionalidad: limpiarCelda(c[4]), 
+                atributos: {}
             };
 
             for(let j = 0; j < columnasPreguntas.length; j++) {
-                let valor = c[j + 5] ? c[j + 5].trim() : "0";
+                let valor = limpiarCelda(c[j + 5] || "0");
                 jugador.atributos[columnasPreguntas[j]] = parseInt(valor) || 0;
             }
             jugadores.push(jugador);
@@ -73,7 +83,7 @@ function hacerSiguientePregunta() {
     console.log(`\n--- [RONDA Nº ${numeroPregunta}] ---`);
     console.log("[IA] Cantidad de candidatos en este turno:", candidatos.length);
 
-    // CRÍTICO: Si ya se respondió la pregunta 10, pasamos directo a resolver la partida
+    // Si ya se respondió la pregunta 10, resolvemos con lo que tengamos
     if (numeroPregunta > 10) {
         console.log("[IA] ¡Límite alcanzado! Resolviendo partida con los mejores candidatos.");
         if (candidatos.length > 0) {
@@ -151,15 +161,20 @@ function hacerSiguientePregunta() {
     document.getElementById("contador-preguntas").innerText = "Pregunta Nº " + numeroPregunta;
 }
 
-// --- PROPUESTA FINAL CON FOTO DEL FUTBOLISTA ---
+// --- PROPUESTA FINAL (CON NOMBRE LIMPIO Y ANTI-BUCLE) ---
 function proponerJugador(jugador) {
     estadoJuego = "ADIVINANDO";
     jugadorAdivinado = jugador;
     console.log("[IA] Proponiendo resolución final. Jugador:", jugador.nombre);
     
+    // Actualizamos el contador superior para que estéticamente quede mejor
+    document.getElementById("contador-preguntas").innerText = "🔮 ¡TENGO UNA PROPUESTA!";
+    
+    // El onerror="this.onerror=null;..." rompe de inmediato cualquier intento de bucle infinito si la imagen fallara
     document.getElementById("texto-pregunta").innerHTML = `
         <p style="margin-bottom: 12px;">¡Ya sé quién es! ¿Es <b>${jugador.nombre}</b>?</p>
-        <img src="img/futbolistas/${jugador.foto}" onerror="this.src='img/futbolistas/generico.webp'" 
+        <img src="img/futbolistas/${jugador.foto}" 
+             onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/53/53283.png';" 
              style="max-width: 160px; max-height: 160px; border-radius: 20px; border: 4px solid #FFD700; box-shadow: 0 8px 20px rgba(0,0,0,0.3); display: block; margin: 15px auto;">
     `;
 }
@@ -204,7 +219,7 @@ function traducirAtributoAPregunta(attr) {
 // --- LÓGICA DE RESPUESTA ---
 function responder(valor) {
     const valorNumerico = parseInt(valor);
-    console.log(`[Usuario] Click botón valor: ${valorNumerico} (Buscando coincidencia exacta)`);
+    console.log(`[Usuario] Click botón valor: ${valorNumerico}`);
 
     if (estadoJuego === "ADIVINANDO") {
         if (valorNumerico === 1) {
