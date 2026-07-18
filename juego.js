@@ -45,6 +45,12 @@ async function cargarBaseDatos() {
             }
             jugadores.push(jugador);
         }
+
+        // --- UBICACIÓN CORRECTA: Cargamos los jugadores de la IA después de procesar el CSV ---
+        const jugadoresLocales = JSON.parse(localStorage.getItem("jugadores_ia")) || [];
+        jugadores = [...jugadores, ...jugadoresLocales];
+        // -------------------------------------------------------------------------------------
+
         console.log("Base de datos cargada con éxito. Total jugadores:", jugadores.length);
         iniciarJuego();
     } catch (e) {
@@ -134,7 +140,6 @@ function responder(valor) {
         candidatos = candidatos.filter(jugador => {
             const valorAtributo = parseInt(jugador.atributos[atributoActual]);
             
-            // LOG DE SEGURIDAD PARA VER POR QUÉ SE VA PELÉ
             if (jugador.nombre.includes("Pele")) {
                 console.log("Evaluando a Pele:", "Valor CSV:", valorAtributo, "¿Coincide?", valorAtributo === valorNumerico);
             }
@@ -152,7 +157,7 @@ function responder(valor) {
     }
 
     if (candidatos.length === 0) {
-        document.getElementById("texto-pregunta").innerText = "No encontré a nadie. Revisa consola (F12).";
+        mostrarFormularioAprendizaje();
         return;
     }
     
@@ -160,4 +165,59 @@ function responder(valor) {
     hacerSiguientePregunta();
 }
 
+// --- NUEVAS FUNCIONES DE APRENDIZAJE IA ---
+
+function mostrarFormularioAprendizaje() {
+    document.getElementById("texto-pregunta").innerText = "¡Me rindo, che! No sé quién es... ¿En qué futbolista estabas pensando?";
+    
+    const contenedorBotones = document.querySelector(".botones-contenedor");
+    contenedorBotones.innerHTML = `
+        <div style="display: flex; flex-direction: column; gap: 12px; width: 85%; margin: 0 auto; align-items: center;">
+            <input type="text" id="nombre-nuevo-jugador" placeholder="Escribí el nombre del jugador..." 
+                   style="padding: 14px; border-radius: 25px; border: 3px solid #FFD700; font-size: 16px; text-align: center; width: 100%; outline: none; font-weight: bold;">
+            <button class="btn btn-si" onclick="procesarAprendizaje()" style="width: 100%; margin: 0;">Enseñar a Messi</button>
+        </div>
+    `;
+}
+
+function procesarAprendizaje() {
+    const nombreInput = document.getElementById("nombre-nuevo-jugador").value.trim();
+    
+    if (!nombreInput) {
+        alert("¡Dale, bobo! Poné un nombre válido.");
+        return;
+    }
+
+    let nuevoJugador = {
+        id: "local_" + Date.now(),
+        nombre: nombreInput,
+        foto: "generico.webp", 
+        equipo: "Personalizado",
+        nacionalidad: "Desconocida",
+        atributos: {}
+    };
+
+    columnasPreguntas.forEach(attr => {
+        if (attr in respuestasUsuario) {
+            nuevoJugador.atributos[attr] = respuestasUsuario[attr] === -1 ? 0 : respuestasUsuario[attr];
+        } else {
+            nuevoJugador.atributos[attr] = 0;
+        }
+    });
+
+    const jugadoresLocales = JSON.parse(localStorage.getItem("jugadores_ia")) || [];
+    jugadoresLocales.push(nuevoJugador);
+    localStorage.setItem("jugadores_ia", JSON.stringify(jugadoresLocales));
+
+    document.getElementById("texto-pregunta").innerText = `¡Espectacular! Ya guardé a ${nombreInput} en mi memoria. En la próxima partida no se me escapa.`;
+    
+    const contenedorBotones = document.querySelector(".botones-contenedor");
+    contenedorBotones.innerHTML = `
+        <div class="fila-unika">
+            <button class="btn btn-si" onclick="location.reload()" style="width: 100%;">Volver a jugar</button>
+        </div>
+    `;
+}
+
+// Inicialización limpia de la app
 cargarBaseDatos();
