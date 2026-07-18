@@ -7,6 +7,10 @@ let juegoIniciado = false;
 let atributoActual = "";
 let candidatos = []; 
 
+// Control de estados de la IA
+let estadoJuego = "JUGANDO"; // Puede ser: "JUGANDO", "ADIVINANDO", "APRENDIENDO"
+let jugadorAdivinado = null;
+
 const columnasPreguntas = [
     "ZURDO", "RETIRADO", "PORTERO", "DEFENSA", "CENTROCAMPISTA", "DELANTERO",
     "EUROPA", "EUROPA_HISTORICO", "AFRICA", "AMERICA_NORTE", "AMERICA_SUR", "OCEANIA", "ASIA",
@@ -24,15 +28,11 @@ async function cargarBaseDatos() {
         
         const texto = await respuesta.text();
         const lineas = texto.split("\n").map(l => l.trim()).filter(l => l.length > 0);
-        console.log("Líneas cargadas:", lineas.length);
         
         jugadores = [];
         for(let i = 1; i < lineas.length; i++) {
             const c = lineas[i].split(","); 
-            if(c.length < 5) {
-                console.warn("Línea ignorada por formato incorrecto (menos de 5 columnas):", lineas[i]);
-                continue;
-            }
+            if(c.length < 5) continue;
 
             let jugador = {
                 id: c[0].trim(), nombre: c[1].trim(), foto: c[2].trim(),
@@ -46,7 +46,6 @@ async function cargarBaseDatos() {
             jugadores.push(jugador);
         }
 
-        // Cargar los jugadores aprendidos por la IA desde el almacenamiento local
         const jugadoresLocales = JSON.parse(localStorage.getItem("jugadores_ia")) || [];
         jugadores = [...jugadores, ...jugadoresLocales];
 
@@ -64,12 +63,11 @@ function iniciarJuego() {
     respuestasUsuario = {};
     candidatos = [...jugadores]; 
     numeroPregunta = 1;
-    juegoIniciado = true;
-    console.log("Juego iniciado. Candidatos iniciales:", candidatos.length);
+    estadoJuego = "JUGANDO";
+    jugadorAdivinado = null;
     hacerSiguientePregunta();
 }
 
-// --- NUEVA FUNCIÓN INTELIGENTE CON ALGORITMO AKINATOR ---
 function hacerSiguientePregunta() {
     let atributosPendientes = columnasPreguntas.filter(a => !(a in respuestasUsuario));
     
@@ -79,7 +77,7 @@ function hacerSiguientePregunta() {
     }
     
     if (candidatos.length === 1) {
-        document.getElementById("texto-pregunta").innerText = "¡Ya sé quién es! ¿Es " + candidatos[0].nombre + "?";
+        proponerJugador(candidatos[0]);
         return;
     }
     
@@ -91,41 +89,59 @@ function hacerSiguientePregunta() {
     let mejoresAtributos = [];
     let menorDiferencia = Infinity;
     
-    // Evaluamos qué pregunta divide mejor al grupo actual de candidatos
     atributosPendientes.forEach(attr => {
         let conAtributo = candidatos.filter(j => parseInt(j.atributos[attr]) === 1).length;
         let sinAtributo = candidatos.length - conAtributo;
         
-        // SI LA PREGUNTA NO APORTA NADA (ej: nadie es delantero o todos son europeos), SE IGNORA
-        if (conAtributo === 0 || sinAtributo === 0) {
-            return; 
-        }
+        if (conAtributo === 0 || sinAtributo === 0) return; 
         
-        // Buscamos la que más se acerque a dividir 50/50 (diferencia más cercana a 0)
         let diferencia = Math.abs(conAtributo - sinAtributo);
-        
         if (diferencia < menorDiferencia) {
             menorDiferencia = diferencia;
-            mejoresAtributos = [attr]; // Nueva mejor pregunta encontrada
+            mejoresAtributos = [attr];
         } else if (diferencia === menorDiferencia) {
-            mejoresAtributos.push(attr); // Empate técnico
+            mejoresAtributos.push(attr);
         }
     });
     
-    // Si ninguna pregunta divide al grupo (todos los restantes tienen datos idénticos)
     if (mejoresAtributos.length === 0) {
         atributoActual = atributosPendientes[0];
     } else {
-        // ALEATORIEDAD CON TIE-BREAKER: De las mejores preguntas posibles, elige una al azar
         const indiceAleatorio = Math.floor(Math.random() * mejoresAtributos.length);
         atributoActual = mejoresAtributos[indiceAleatorio];
     }
     
     const textoPregunta = traducirAtributoAPregunta(atributoActual);
     
-    document.getElementById("texto-pregunta").innerText = textoPregunta;
+    // --- CONTROL VISUAL: PREGUNTA DE ORO (PREGUNTA 10) ---
+    const imgGenio = document.querySelector(".genio-contenedor img") || document.querySelector("img");
+    const contenedorPrincipal = document.body; 
+    
+    if (numeroPregunta === 10) {
+        if (imgGenio) imgGenio.src = "img/messi_oro.png"; // Ruta del Messi dorado actualizada
+        
+        contenedorPrincipal.style.transition = "all 0.8s ease";
+        contenedorPrincipal.style.background = "linear-gradient(135deg, #FFE259 0%, #FFA751 100%)";
+        
+        document.getElementById("texto-pregunta").innerHTML = `✨ <b style="color: #D4AF37; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">¡LA PREGUNTA DE ORO!</b> ✨<br><br>${textoPregunta}`;
+    } else {
+        document.getElementById("texto-pregunta").innerText = textoPregunta;
+    }
+    
     document.getElementById("contador-preguntas").innerText = "Pregunta Nº " + numeroPregunta;
-    console.log(`Pregunta ${numeroPregunta}: ${atributoActual} | Candidatos restantes: ${candidatos.length}`);
+}
+
+// --- PROPUESTA FINAL CON FOTO DEL FUTBOLISTA ---
+function proponerJugador(jugador) {
+    estadoJuego = "ADIVINANDO";
+    jugadorAdivinado = jugador;
+    
+    // Renderizado con la ruta del directorio img/futbolistas/
+    document.getElementById("texto-pregunta").innerHTML = `
+        <p style="margin-bottom: 12px;">¡Ya sé quién es! ¿Es <b>${jugador.nombre}</b>?</p>
+        <img src="img/futbolistas/${jugador.foto}" onerror="this.src='img/futbolistas/generico.webp'" 
+             style="max-width: 160px; max-height: 160px; border-radius: 20px; border: 4px solid #FFD700; box-shadow: 0 8px 20px rgba(0,0,0,0.3); display: block; margin: 15px auto;">
+    `;
 }
 
 function traducirAtributoAPregunta(attr) {
@@ -169,36 +185,56 @@ function traducirAtributoAPregunta(attr) {
 // --- LÓGICA DE RESPUESTA ---
 function responder(valor) {
     const valorNumerico = parseInt(valor);
-    console.log("--- FILTRO ---");
-    console.log("Atributo actual:", atributoActual);
-    console.log("Respuesta usuario:", valorNumerico);
+
+    if (estadoJuego === "ADIVINANDO") {
+        if (valorNumerico === 1) {
+            registrarVictoria();
+        } else {
+            mostrarFormularioAprendizaje();
+        }
+        return;
+    }
 
     if (valorNumerico !== -1) {
         candidatos = candidatos.filter(jugador => {
             const valorAtributo = parseInt(jugador.atributos[atributoActual]);
             return valorAtributo === valorNumerico;
         });
-        console.log("Candidatos restantes tras filtrar:", candidatos.length);
     }
     
     respuestasUsuario[atributoActual] = valorNumerico;
-
-    if (candidatos.length === 1) {
-        document.getElementById("texto-pregunta").innerText = "¡Ya sé quién es! ¿Es " + candidatos[0].nombre + "?";
-        return;
-    }
-
-    if (candidatos.length === 0) {
-        mostrarFormularioAprendizaje();
-        return;
-    }
     
     numeroPregunta++;
     hacerSiguientePregunta();
 }
 
+// --- REGISTRAR VICTORIA Y HISTORIAL ---
+function registrarVictoria() {
+    estadoJuego = "APRENDIENDO";
+    
+    const historial = JSON.parse(localStorage.getItem("album_capturas")) || [];
+    if (!historial.includes(jugadorAdivinado.nombre)) {
+        historial.push(jugadorAdivinado.nombre);
+        localStorage.setItem("album_capturas", JSON.stringify(historial));
+    }
+
+    document.getElementById("texto-pregunta").innerHTML = `
+        ¡Jaja! ¡Te gané, viste! Re fácil.<br><br>
+        🏆 <b>${jugadorAdivinado.nombre}</b> se sumó a tu Álbum de Capturas.<br>
+        ¡Ya coleccionaste <b>${historial.length}</b> futbolistas!
+    `;
+
+    const contenedorBotones = document.querySelector(".botones-contenedor");
+    contenedorBotones.innerHTML = `
+        <div class="fila-unika">
+            <button class="btn btn-si" onclick="location.reload()" style="width: 100%;">Volver a jugar</button>
+        </div>
+    `;
+}
+
 // --- FUNCIONES DE APRENDIZAJE IA ---
 function mostrarFormularioAprendizaje() {
+    estadoJuego = "APRENDIENDO";
     document.getElementById("texto-pregunta").innerText = "¡Me rindo, che! No sé quién es... ¿En qué futbolista estabas pensando?";
     
     const contenedorBotones = document.querySelector(".botones-contenedor");
@@ -206,7 +242,7 @@ function mostrarFormularioAprendizaje() {
         <div style="display: flex; flex-direction: column; gap: 12px; width: 85%; margin: 0 auto; align-items: center;">
             <input type="text" id="nombre-nuevo-jugador" placeholder="Escribí el nombre del jugador..." 
                    style="padding: 14px; border-radius: 25px; border: 3px solid #FFD700; font-size: 16px; text-align: center; width: 100%; outline: none; font-weight: bold;">
-            <button class="btn btn-si" onclick="procesarAprendizaje()" style="width: 100%; margin: 0;">Enseñar a Messi</button>
+            <button class="btn btn-si" onclick="procesarAprendizaje()" style="width: 100%; margin: 0;">Enseñar a Akimessi</button>
         </div>
     `;
 }
@@ -222,7 +258,7 @@ function procesarAprendizaje() {
     let nuevoJugador = {
         id: "local_" + Date.now(),
         nombre: nombreInput,
-        foto: "generico.webp", 
+        foto: "generico.webp", // Se guarda el nombre base y el renderizado le añade el prefijo correctamente
         equipo: "Personalizado",
         nacionalidad: "Desconocida",
         atributos: {}
