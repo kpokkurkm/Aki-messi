@@ -14,7 +14,91 @@ body, html {
     background-color: #1a4314;
 }
 
-/* Contenedor principal */
+/* Clase utilidad para ocultar pantallas */
+.oculto {
+    display: none !important;
+}
+
+/* Estilos para las nuevas pantallas (Inicio y Logros) */
+.contenedor-inicio, .contenedor-logros {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow: hidden;
+    background: radial-gradient(circle, #2e7d32 40%, #1b5e20 100%);
+    z-index: 2;
+}
+
+.contenedor-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    width: 100%;
+}
+
+/* Estilo Base de los Botones de Menú (Estilo Cápsula/Píldora) */
+.btn-menu {
+    width: 100%;
+    padding: 18px 10px;
+    font-family: 'Impact', 'Arial Black', sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: #ffffff;
+    border: 4px solid #ffffff;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    text-transform: uppercase;
+    outline: none;
+}
+
+.btn-menu:hover {
+    transform: translateY(-4px);
+    box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.4);
+}
+
+.btn-menu:active {
+    transform: translateY(2px);
+}
+
+/* Colores específicos del boceto */
+.btn-rojo { background-color: #d32f2f; }
+.btn-oro { background-color: #d4af37; color: #111; text-shadow: none; }
+.btn-azul { background-color: #1976d2; }
+
+/* Estilos específicos de la interfaz de Logros */
+.titulo-logros {
+    color: #fff;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.lista-logros {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    border: 3px solid #fff;
+    border-radius: 20px;
+    padding: 20px;
+    color: #fff;
+    max-height: 50vh;
+    overflow-y: auto;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* Contenedor principal original */
 .contenedor-juego {
     position: relative;
     width: 100%;

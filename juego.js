@@ -7,9 +7,11 @@ let juegoIniciado = false;
 let atributoActual = "";
 let candidatos = []; 
 
-// Control de estados de la IA
+// Control de estados y modos de la IA
 let estadoJuego = "JUGANDO"; // Puede ser: "JUGANDO", "ADIVINANDO", "APRENDIENDO"
 let jugadorAdivinado = null;
+let modoJuego = ""; // Puede ser: "entrenamiento" o "competitivo"
+const musica = document.getElementById("musica-fondo");
 
 const columnasPreguntas = [
     "ZURDO", "RETIRADO", "PORTERO", "DEFENSA", "CENTROCAMPISTA", "DELANTERO",
@@ -60,7 +62,7 @@ async function cargarBaseDatos() {
         jugadores = [...jugadores, ...jugadoresLocales];
 
         console.log("[Base de Datos] Éxito. Total jugadores cargados:", jugadores.length);
-        iniciarJuego();
+        // Modificado: Se elimina iniciarJuego() automático para permanecer en la pantalla de inicio.
     } catch (e) {
         console.error("[Base de Datos] Error crítico:", e);
         document.getElementById("texto-pregunta").innerText = "⚠️ Error al conectar con la base de datos: " + e.message;
@@ -75,7 +77,7 @@ function iniciarJuego() {
     numeroPregunta = 1;
     estadoJuego = "JUGANDO";
     jugadorAdivinado = null;
-    console.log("[Juego] Partida iniciada. Pool inicial de candidatos:", candidatos.length);
+    console.log("[Juego] Partida iniciada en modo:", modoJuego, "| Candidatos:", candidatos.length);
     hacerSiguientePregunta();
 }
 
@@ -144,7 +146,7 @@ function hacerSiguientePregunta() {
     
     // --- CONTROL VISUAL: PREGUNTA DE ORO (PREGUNTA 10) ---
     const imgGenio = document.querySelector(".genio-contenedor img") || document.querySelector("img");
-    const contenedorPrincipal = document.body; 
+    const contenedorPrincipal = document.getElementById("pantalla-juego"); 
     
     if (numeroPregunta === 10) {
         console.log("[Efecto Visual] ¡Activando modo Messi de Oro!");
@@ -170,7 +172,7 @@ function proponerJugador(jugador) {
     // Actualizamos el contador superior para que estéticamente quede mejor
     document.getElementById("contador-preguntas").innerText = "🔮 ¡TENGO UNA PROPUESTA!";
     
-    // El onerror="this.onerror=null;..." rompe de inmediato cualquier intento de bucle infinito si la imagen fallara
+    // El onerror rompe de inmediato cualquier intento de bucle infinito si la imagen fallara
     document.getElementById("texto-pregunta").innerHTML = `
         <p style="margin-bottom: 12px;">¡Ya sé quién es! ¿Es <b>${jugador.nombre}</b>?</p>
         <img src="img/futbolistas/${jugador.foto}" 
@@ -255,22 +257,35 @@ function registrarVictoria() {
     estadoJuego = "APRENDIENDO";
     console.log("[Juego] ¡Victoria de la IA!");
     
-    const historial = JSON.parse(localStorage.getItem("album_capturas")) || [];
-    if (!historial.includes(jugadorAdivinado.nombre)) {
-        historial.push(jugadorAdivinado.nombre);
-        localStorage.setItem("album_capturas", JSON.stringify(historial));
-    }
+    if (modoJuego === "competitivo") {
+        const historial = JSON.parse(localStorage.getItem("album_capturas")) || [];
+        if (!historial.includes(jugadorAdivinado.nombre)) {
+            historial.push(jugadorAdivinado.nombre);
+            localStorage.setItem("album_capturas", JSON.stringify(historial));
+        }
 
-    document.getElementById("texto-pregunta").innerHTML = `
-        ¡Jaja! ¡Te gané, viste! Re fácil.<br><br>
-        🏆 <b>${jugadorAdivinado.nombre}</b> se sumó a tu Álbum de Capturas.<br>
-        ¡Ya coleccionaste <b>${historial.length}</b> futbolistas!
-    `;
+        // Incrementa la racha de victorias competitiva
+        let racha = parseInt(localStorage.getItem("racha_competitiva")) || 0;
+        racha++;
+        localStorage.setItem("racha_competitiva", racha);
+
+        document.getElementById("texto-pregunta").innerHTML = `
+            ¡Jaja! ¡Te gané, viste! Re fácil.<br><br>
+            🏆 <b>${jugadorAdivinado.nombre}</b> se sumó a tu Álbum de Capturas.<br>
+            ¡Ya coleccionaste <b>${historial.length}</b> futbolistas y tu racha es de <b>${racha}</b>!
+        `;
+    } else {
+        // Modo Entrenamiento: Sin registros competitivos
+        document.getElementById("texto-pregunta").innerHTML = `
+            ¡Jaja! ¡Te gané, viste! Re fácil.<br><br>
+            🧠 Modo Entrenamiento: Adiviné a <b>${jugadorAdivinado.nombre}</b> con éxito.
+        `;
+    }
 
     const contenedorBotones = document.querySelector(".botones-contenedor");
     contenedorBotones.innerHTML = `
         <div class="fila-unika">
-            <button class="btn btn-si" onclick="location.reload()" style="width: 100%;">Volver a jugar</button>
+            <button class="btn btn-si" onclick="location.reload()" style="width: 100%;">Volver al menú</button>
         </div>
     `;
 }
@@ -321,15 +336,78 @@ function procesarAprendizaje() {
 
     console.log("[IA Aprendizaje] Nuevo jugador guardado localmente:", nombreInput);
 
+    // Si pierde en competitivo, la racha vuelve a 0
+    if (modoJuego === "competitivo") {
+        localStorage.setItem("racha_competitiva", 0);
+    }
+
     document.getElementById("texto-pregunta").innerText = `¡Espectacular! Ya guardé a ${nombreInput} en mi memoria. En la próxima partida no se me escapa.`;
     
     const contenedorBotones = document.querySelector(".botones-contenedor");
     contenedorBotones.innerHTML = `
         <div class="fila-unika">
-            <button class="btn btn-si" onclick="location.reload()" style="width: 100%;">Volver a jugar</button>
+            <button class="btn btn-si" onclick="location.reload()" style="width: 100%;">Volver al menú</button>
         </div>
     `;
 }
 
-// Inicialización de la app
+// --- LOGICA DE CONTROL Y PANTALLAS (MENÚ INICIAL) ---
+function iniciarMusica() {
+    if (musica) {
+        musica.play().catch(error => {
+            console.log("El navegador bloqueó el autoplay temporalmente:", error);
+        });
+    }
+}
+
+function actualizarPantallaLogros() {
+    const historial = JSON.parse(localStorage.getItem("album_capturas")) || [];
+    const racha = parseInt(localStorage.getItem("racha_competitiva")) || 0;
+    const lista = document.getElementById("lista-logros");
+    
+    let rangoLogro = "Principiante (0-10)";
+    if (historial.length > 10 && historial.length <= 20) rangoLogro = "Amateur (11-20)";
+    if (historial.length > 20) rangoLogro = "Leyenda Mundial (20+)";
+
+    lista.innerHTML = `
+        <p><b>Racha actual:</b> ${racha} victorias consecutivas</p>
+        <p><b>Total futbolistas capturados:</b> ${historial.length}</p>
+        <p><b>Rango actual:</b> ${rangoLogro}</p>
+        <hr style="margin: 12px 0; border: 0; border-top: 2px dashed rgba(255,255,255,0.3);">
+        <p style="font-size: 0.9rem; color: #bbb; max-height: 100px; overflow-y: auto;">
+            <b>Colección:</b> ${historial.join(", ") || "Ningún jugador capturado todavía."}
+        </p>
+    `;
+}
+
+// Controladores de eventos del Menú
+document.getElementById("btn-entrenamiento").addEventListener("click", () => {
+    iniciarMusica();
+    modoJuego = "entrenamiento";
+    document.getElementById("pantalla-inicio").classList.add("oculto");
+    document.getElementById("pantalla-juego").classList.remove("oculto");
+    iniciarJuego();
+});
+
+document.getElementById("btn-estrella").addEventListener("click", () => {
+    iniciarMusica();
+    modoJuego = "competitivo";
+    document.getElementById("pantalla-inicio").classList.add("oculto");
+    document.getElementById("pantalla-juego").classList.remove("oculto");
+    iniciarJuego();
+});
+
+document.getElementById("btn-logros").addEventListener("click", () => {
+    iniciarMusica();
+    actualizarPantallaLogros();
+    document.getElementById("pantalla-inicio").classList.add("oculto");
+    document.getElementById("pantalla-logros").classList.remove("oculto");
+});
+
+document.getElementById("btn-volver").addEventListener("click", () => {
+    document.getElementById("pantalla-logros").classList.add("oculto");
+    document.getElementById("pantalla-inicio").classList.remove("oculto");
+});
+
+// Inicialización silenciosa de la base de datos
 cargarBaseDatos();

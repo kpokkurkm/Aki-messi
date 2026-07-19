@@ -7,7 +7,29 @@
     <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
-    <div id="pantalla-juego" class="contenedor-juego">
+    <!-- Elemento de audio con la ruta relativa correcta para GitHub -->
+    <audio id="musica-fondo" src="audio/parado_no_bailao.mp3" loop></audio>
+
+    <!-- PANTALLA DE INICIO (El Boceto) -->
+    <div id="pantalla-inicio" class="contenedor-inicio">
+        <div class="contenedor-menu">
+            <button id="btn-entrenamiento" class="btn-menu btn-rojo">ENTRENAMIENTO</button>
+            <button id="btn-estrella" class="btn-menu btn-oro">ESTRELLA MUNDIAL</button>
+            <button id="btn-logros" class="btn-menu btn-azul">LOGROS</button>
+        </div>
+    </div>
+
+    <!-- PANTALLA DE LOGROS -->
+    <div id="pantalla-logros" class="contenedor-logros oculto">
+        <h2 class="titulo-logros">Tus Logros</h2>
+        <div id="lista-logros" class="lista-logros">
+            <!-- Se poblará dinámicamente desde JS -->
+        </div>
+        <button id="btn-volver" class="btn-menu btn-azul" style="margin-top: 20px;">VOLVER AL MENÚ</button>
+    </div>
+
+    <!-- PANTALLA DEL JUEGO (Oculta al inicio) -->
+    <div id="pantalla-juego" class="contenedor-juego oculto">
         <!-- Marcador superior corregido con ID -->
         <div id="marcador-superior" class="marcador-superior">
             <span id="contador-preguntas">Pregunta Nº 1</span>
