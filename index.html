@@ -19,18 +19,42 @@
         </div>
     </div>
 
-    <!-- PANTALLA DE LOGROS -->
+    <!-- PANTALLA DE LOGROS (Actualizada con Grid y Estilo Retro) -->
     <div id="pantalla-logros" class="contenedor-logros oculto">
-        <h2 class="titulo-logros">Tus Logros</h2>
-        <div id="lista-logros" class="lista-logros">
-            <!-- Se poblará dinámicamente desde JS -->
+        <h2 class="titulo-logros">TUS LOGROS</h2>
+        
+        <!-- Caja negra estirada -->
+        <div class="caja-contenido-logros">
+            <div class="stats-logros">
+                <p><strong>Racha actual:</strong> <span id="racha-consecutivas">0</span> victorias consecutivas</p>
+                <p><strong>Total futbolistas capturados:</strong> <span id="total-capturados">0</span></p>
+                <p><strong>Rango actual:</strong> <span id="rango-texto">Principiante (0-10)</span></p>
+            </div>
+
+            <hr class="linea-separadora">
+
+            <!-- Sección de Fichajes / Recompensas -->
+            <h3 class="subtitulo-logros">HISTORIAL DE FICHAJES</h3>
+            <div class="grid-logos">
+                <!-- Los 10 equipos por los que fichas. JS les quitará la clase 'oscurecido' al desbloquearlos -->
+                <div class="item-logo"><img src="img/logos/equipo1.png" id="logo-1" class="logo-club oscurecido" alt="Club 1"><span class="req-victorias">1 v.</span></div>
+                <div class="item-logo"><img src="img/logos/equipo2.png" id="logo-2" class="logo-club oscurecido" alt="Club 2"><span class="req-victorias">2 v.</span></div>
+                <div class="item-logo"><img src="img/logos/equipo3.png" id="logo-3" class="logo-club oscurecido" alt="Club 3"><span class="req-victorias">3 v.</span></div>
+                <div class="item-logo"><img src="img/logos/equipo4.png" id="logo-4" class="logo-club oscurecido" alt="Club 4"><span class="req-victorias">5 v.</span></div>
+                <div class="item-logo"><img src="img/logos/equipo5.png" id="logo-5" class="logo-club oscurecido" alt="Club 5"><span class="req-victorias font-oro">7 v.</span></div>
+                <div class="item-logo"><img src="img/logos/equipo6.png" id="logo-6" class="logo-club oscurecido" alt="Club 6"><span class="req-victorias">10 v.</span></div>
+                <div class="item-logo"><img src="img/logos/equipo7.png" id="logo-7" class="logo-club oscurecido" alt="Club 7"><span class="req-victorias">15 v.</span></div>
+                <div class="item-logo"><img src="img/logos/equipo8.png" id="logo-8" class="logo-club oscurecido" alt="Club 8"><span class="req-victorias">20 v.</span></div>
+                <div class="item-logo"><img src="img/logos/equipo9.png" id="logo-9" class="logo-club oscurecido" alt="Club 9"><span class="req-victorias">25 v.</span></div>
+                <div class="item-logo"><img src="img/logos/equipo10.png" id="logo-10" class="logo-club oscurecido" alt="Club 10"><span class="req-victorias font-oro">50 v.</span></div>
+            </div>
         </div>
-        <button id="btn-volver" class="btn-menu btn-azul" style="margin-top: 20px;">VOLVER AL MENÚ</button>
+        
+        <button id="btn-volver" class="btn-menu btn-azul">VOLVER AL MENÚ</button>
     </div>
 
-    <!-- PANTALLA DEL JUEGO (Oculta al inicio) -->
+    <!-- PANTALLA DEL JUEGO -->
     <div id="pantalla-juego" class="contenedor-juego oculto">
-        <!-- Marcador superior corregido con ID -->
         <div id="marcador-superior" class="marcador-superior">
             <span id="contador-preguntas">Pregunta Nº 1</span>
         </div>
@@ -43,7 +67,6 @@
         <!-- Contenedor del Genio y su Bocadillo -->
         <div class="personaje-contenedor">
             <div class="bocadillo-charla" id="bocadillo">
-                <!-- ID texto-pregunta coincide con el JS -->
                 <p id="texto-pregunta">¡Hola! Pensá en un futbolista... ¿Qué adivinás, bobo?</p>
             </div>
             <img src="img/messi_genio.png" id="imagen-messi" alt="AkiMessi Genio">

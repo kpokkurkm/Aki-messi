@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Squada+One&display=swap');
+
 /* Configuración básica y tipografía de sistema optimizada */
 * {
     box-sizing: border-box;
@@ -19,8 +21,8 @@ body, html {
     display: none !important;
 }
 
-/* Estilos para las nuevas pantallas (Inicio y Logros) */
-.contenedor-inicio, .contenedor-logros {
+/* Pantalla de Inicio */
+.contenedor-inicio {
     position: relative;
     width: 100%;
     max-width: 480px;
@@ -34,6 +36,24 @@ body, html {
     overflow: hidden;
     background: radial-gradient(circle, #2e7d32 40%, #1b5e20 100%);
     z-index: 2;
+}
+
+/* PANTALLA DE LOGROS (Optimizada para estirarse al 100% de la pantalla) */
+.contenedor-logros {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    height: 100vh; /* Ocupa todo el alto de la pantalla */
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Distribuye arriba, centro y botón abajo */
+    align-items: center;
+    padding: 20px;
+    overflow: hidden;
+    background: radial-gradient(circle, #2e7d32 40%, #1b5e20 100%);
+    z-index: 2;
+    box-sizing: border-box;
 }
 
 .contenedor-menu {
@@ -76,29 +96,99 @@ body, html {
 .btn-oro { background-color: #d4af37; color: #111; text-shadow: none; }
 .btn-azul { background-color: #1976d2; }
 
-/* Estilos específicos de la interfaz de Logros */
+/* Título Retro estilo Mundial 94/98 */
 .titulo-logros {
-    color: #fff;
-    font-size: 2rem;
-    margin-bottom: 20px;
+    font-family: 'Squada One', sans-serif;
+    font-size: 3.5rem;
+    color: #ffffff;
+    text-shadow: 3px 3px 0px #000, -1px -1px 0px #000, 1px -1px 0px #000, -1px 1px 0px #000;
+    letter-spacing: 2px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    text-align: center;
     text-transform: uppercase;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
 
-.lista-logros {
-    width: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    border: 3px solid #fff;
+/* Caja negra que se estira de arriba a abajo */
+.caja-contenido-logros {
+    background-color: rgba(0, 0, 0, 0.85);
+    border: 3px solid #ffffff;
     border-radius: 20px;
+    width: 100%;
+    flex-grow: 1; /* Hace que ocupe todo el espacio vertical disponible */
+    margin-bottom: 25px; /* Margen limpio respecto al botón de volver */
     padding: 20px;
-    color: #fff;
-    max-height: 50vh;
-    overflow-y: auto;
-    font-size: 1.1rem;
-    line-height: 1.6;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Contenedor principal original */
+/* Estilos de los textos de estadísticas */
+.stats-logros p {
+    color: #ffffff;
+    font-size: 1.1rem;
+    margin: 10px 0;
+    line-height: 1.4;
+}
+
+.linea-separadora {
+    border: 0;
+    border-top: 1px dashed rgba(255, 255, 255, 0.4);
+    margin: 15px 0;
+}
+
+.subtitulo-logros {
+    font-family: 'Squada One', sans-serif;
+    color: #ffd700;
+    text-align: center;
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Grid de 10 logos (Recompensas) */
+.grid-logos {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px 10px;
+    justify-items: center;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.item-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Efecto para los escudos oscurecidos */
+.logo-club {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+.logo-club.oscurecido {
+    filter: grayscale(100%) brightness(30%); /* Gris oscuro/apagado */
+    opacity: 0.5;
+}
+
+/* Texto de victorias debajo del escudo */
+.req-victorias {
+    color: #aaaaaa;
+    font-size: 0.75rem;
+    margin-top: 4px;
+}
+
+.font-oro {
+    color: #ffd700;
+    font-weight: bold;
+}
+
+/* Contenedor principal original del Juego */
 .contenedor-juego {
     position: relative;
     width: 100%;
