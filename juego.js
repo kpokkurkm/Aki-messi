@@ -347,7 +347,7 @@ function iniciarMusica() {
     }
 }
 
-// --- NUEVO SISTEMA DE LOGROS COMPATIBLE (EVITA ERRORES 404/NULL) ---
+// --- NUEVO SISTEMA DE LOGROS COMPATIBLE (CON FIX DE PRIMER ESCUDO) ---
 function actualizarLogros() {
     const historial = JSON.parse(localStorage.getItem("album_capturas")) || [];
     const racha = parseInt(localStorage.getItem("racha_competitiva")) || 0;
@@ -377,8 +377,8 @@ function actualizarLogros() {
         document.getElementById('rango-texto').innerText = rangoTexto;
     }
 
-    // CONTROL DE ESCUDOS VECTORIALES: Remueve el filtro oscuro de forma segura si el elemento existe
-    if (nivelActual >= 0)  { const el = document.getElementById('logo-1'); if(el) el.classList.remove('oscurecido'); }
+    // CONTROL DE ESCUDOS: Remueve la silueta negra al cumplir el nivel requerido
+    if (nivelActual >= 1)  { const el = document.getElementById('logo-1'); if(el) el.classList.remove('oscurecido'); }
     if (nivelActual >= 11) { const el = document.getElementById('logo-2'); if(el) el.classList.remove('oscurecido'); }
     if (nivelActual >= 21) { const el = document.getElementById('logo-3'); if(el) el.classList.remove('oscurecido'); }
     if (nivelActual >= 31) { const el = document.getElementById('logo-4'); if(el) el.classList.remove('oscurecido'); }
@@ -415,14 +415,13 @@ document.getElementById("btn-estrella").addEventListener("click", () => {
 
 document.getElementById("btn-logros").addEventListener("click", () => {
     iniciarMusica();
-    actualizarLogros(); // Llama a la nueva lógica optimizada
+    actualizarLogros(); 
     document.getElementById("pantalla-inicio").classList.add("oculto");
     document.getElementById("pantalla-logros").classList.remove("oculto");
 });
 
 document.getElementById("btn-volver").addEventListener("click", () => {
     document.getElementById("pantalla-logros").classList.add("oculto");
-    document.getElementById("pantalla-inicio").classList.remove("remove" in document.createElement('div').classList ? "oculto" : "oculto");
     document.getElementById("pantalla-inicio").classList.remove("oculto");
 });
 

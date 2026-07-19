@@ -171,9 +171,10 @@ body, html {
     transition: filter 0.3s ease, opacity 0.3s ease;
 }
 
+/* Transforma cualquier imagen o SVG bloqueado en una silueta negra total */
 .logo-club.oscurecido {
-    filter: grayscale(100%) brightness(30%); /* Gris oscuro/apagado */
-    opacity: 0.5;
+    filter: brightness(0) !important;
+    opacity: 1 !important;
 }
 
 /* Texto de victorias debajo del escudo */
