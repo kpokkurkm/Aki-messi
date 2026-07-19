@@ -62,7 +62,6 @@ async function cargarBaseDatos() {
         jugadores = [...jugadores, ...jugadoresLocales];
 
         console.log("[Base de Datos] Éxito. Total jugadores cargados:", jugadores.length);
-        // Modificado: Se elimina iniciarJuego() automático para permanecer en la pantalla de inicio.
     } catch (e) {
         console.error("[Base de Datos] Error crítico:", e);
         document.getElementById("texto-pregunta").innerText = "⚠️ Error al conectar con la base de datos: " + e.message;
@@ -85,7 +84,6 @@ function hacerSiguientePregunta() {
     console.log(`\n--- [RONDA Nº ${numeroPregunta}] ---`);
     console.log("[IA] Cantidad de candidatos en este turno:", candidatos.length);
 
-    // Si ya se respondió la pregunta 10, resolvemos con lo que tengamos
     if (numeroPregunta > 10) {
         console.log("[IA] ¡Límite alcanzado! Resolviendo partida con los mejores candidatos.");
         if (candidatos.length > 0) {
@@ -115,7 +113,6 @@ function hacerSiguientePregunta() {
         return;
     }
     
-    // Algoritmo de descarte óptimo
     let mejoresAtributos = [];
     let menorDiferencia = Infinity;
     
@@ -144,7 +141,6 @@ function hacerSiguientePregunta() {
     const textoPregunta = traducirAtributoAPregunta(atributoActual);
     console.log(`[IA] Atributo seleccionado para preguntar: "${atributoActual}"`);
     
-    // --- CONTROL VISUAL: PREGUNTA DE ORO (PREGUNTA 10) ---
     const imgGenio = document.querySelector(".genio-contenedor img") || document.querySelector("img");
     const contenedorPrincipal = document.getElementById("pantalla-juego"); 
     
@@ -163,16 +159,13 @@ function hacerSiguientePregunta() {
     document.getElementById("contador-preguntas").innerText = "Pregunta Nº " + numeroPregunta;
 }
 
-// --- PROPUESTA FINAL (CON NOMBRE LIMPIO Y ANTI-BUCLE) ---
 function proponerJugador(jugador) {
     estadoJuego = "ADIVINANDO";
     jugadorAdivinado = jugador;
     console.log("[IA] Proponiendo resolución final. Jugador:", jugador.nombre);
     
-    // Actualizamos el contador superior para que estéticamente quede mejor
     document.getElementById("contador-preguntas").innerText = "🔮 ¡TENGO UNA PROPUESTA!";
     
-    // El onerror rompe de inmediato cualquier intento de bucle infinito si la imagen fallara
     document.getElementById("texto-pregunta").innerHTML = `
         <p style="margin-bottom: 12px;">¡Ya sé quién es! ¿Es <b>${jugador.nombre}</b>?</p>
         <img src="img/futbolistas/${jugador.foto}" 
@@ -218,7 +211,6 @@ function traducirAtributoAPregunta(attr) {
     return diccionario[attr] || `¿Tiene la característica: ${attr}?`;
 }
 
-// --- LÓGICA DE RESPUESTA ---
 function responder(valor) {
     const valorNumerico = parseInt(valor);
     console.log(`[Usuario] Click botón valor: ${valorNumerico}`);
@@ -252,7 +244,6 @@ function responder(valor) {
     hacerSiguientePregunta();
 }
 
-// --- REGISTRAR VICTORIA Y HISTORIAL ---
 function registrarVictoria() {
     estadoJuego = "APRENDIENDO";
     console.log("[Juego] ¡Victoria de la IA!");
@@ -264,7 +255,6 @@ function registrarVictoria() {
             localStorage.setItem("album_capturas", JSON.stringify(historial));
         }
 
-        // Incrementa la racha de victorias competitiva
         let racha = parseInt(localStorage.getItem("racha_competitiva")) || 0;
         racha++;
         localStorage.setItem("racha_competitiva", racha);
@@ -275,7 +265,6 @@ function registrarVictoria() {
             ¡Ya coleccionaste <b>${historial.length}</b> futbolistas y tu racha es de <b>${racha}</b>!
         `;
     } else {
-        // Modo Entrenamiento: Sin registros competitivos
         document.getElementById("texto-pregunta").innerHTML = `
             ¡Jaja! ¡Te gané, viste! Re fácil.<br><br>
             🧠 Modo Entrenamiento: Adiviné a <b>${jugadorAdivinado.nombre}</b> con éxito.
@@ -290,7 +279,6 @@ function registrarVictoria() {
     `;
 }
 
-// --- FUNCIONES DE APRENDIZAJE IA ---
 function mostrarFormularioAprendizaje() {
     estadoJuego = "APRENDIENDO";
     document.getElementById("texto-pregunta").innerText = "¡Me rindo, che! No sé quién es... ¿En qué futbolista estabas pensando?";
@@ -336,7 +324,6 @@ function procesarAprendizaje() {
 
     console.log("[IA Aprendizaje] Nuevo jugador guardado localmente:", nombreInput);
 
-    // Si pierde en competitivo, la racha vuelve a 0
     if (modoJuego === "competitivo") {
         localStorage.setItem("racha_competitiva", 0);
     }
@@ -351,36 +338,65 @@ function procesarAprendizaje() {
     `;
 }
 
-// --- LOGICA DE CONTROL Y PANTALLAS (MENÚ INICIAL) ---
+// --- REPRODUCTOR DE MÚSICA SEGURO ---
 function iniciarMusica() {
     if (musica) {
         musica.play().catch(error => {
-            console.log("El navegador bloqueó el autoplay temporalmente:", error);
+            console.log("[Audio] Interacción requerida o bloqueo de autoplay activo:", error);
         });
     }
 }
 
-function actualizarPantallaLogros() {
+// --- NUEVO SISTEMA DE LOGROS COMPATIBLE (EVITA ERRORES 404/NULL) ---
+function actualizarLogros() {
     const historial = JSON.parse(localStorage.getItem("album_capturas")) || [];
     const racha = parseInt(localStorage.getItem("racha_competitiva")) || 0;
-    const lista = document.getElementById("lista-logros");
-    
-    let rangoLogro = "Principiante (0-10)";
-    if (historial.length > 10 && historial.length <= 20) rangoLogro = "Amateur (11-20)";
-    if (historial.length > 20) rangoLogro = "Leyenda Mundial (20+)";
+    const nivelActual = historial.length; 
 
-    lista.innerHTML = `
-        <p><b>Racha actual:</b> ${racha} victorias consecutivas</p>
-        <p><b>Total futbolistas capturados:</b> ${historial.length}</p>
-        <p><b>Rango actual:</b> ${rangoLogro}</p>
-        <hr style="margin: 12px 0; border: 0; border-top: 2px dashed rgba(255,255,255,0.3);">
-        <p style="font-size: 0.9rem; color: #bbb; max-height: 100px; overflow-y: auto;">
-            <b>Colección:</b> ${historial.join(", ") || "Ningún jugador capturado todavía."}
-        </p>
-    `;
+    // Actualiza los marcadores numéricos de la interfaz si existen
+    if (document.getElementById('racha-consecutivas')) {
+        document.getElementById('racha-consecutivas').innerText = racha;
+    }
+    if (document.getElementById('total-capturados')) {
+        document.getElementById('total-capturados').innerText = nivelActual;
+    }
+    
+    // Determina tu rango de texto oficial en base a tus nuevos 10 equipos
+    let rangoTexto = "A.D. Torrejón de Ardoz (Niv. 1-10)";
+    if (nivelActual > 10 && nivelActual <= 20) rangoTexto = "Alcorcón (Niv. 11-20)";
+    if (nivelActual > 20 && nivelActual <= 30) rangoTexto = "Rayo Vallecano (Niv. 21-30)";
+    if (nivelActual > 30 && nivelActual <= 40) rangoTexto = "Ajax (Niv. 31-40)";
+    if (nivelActual > 40 && nivelActual <= 50) rangoTexto = "Tottenham (Niv. 41-50)";
+    if (nivelActual > 50 && nivelActual <= 60) rangoTexto = "Liverpool (Niv. 51-60)";
+    if (nivelActual > 60 && nivelActual <= 70) rangoTexto = "FC Barcelona (Niv. 61-70)";
+    if (nivelActual > 70 && nivelActual <= 80) rangoTexto = "Inter Miami (Niv. 71-80)";
+    if (nivelActual > 80 && nivelActual <= 90) rangoTexto = "Selección Española (Niv. 81-90)";
+    if (nivelActual > 90) rangoTexto = "¡Campeón del Mundo! (Niv. 91-100)";
+
+    if (document.getElementById('rango-texto')) {
+        document.getElementById('rango-texto').innerText = rangoTexto;
+    }
+
+    // CONTROL DE ESCUDOS VECTORIALES: Remueve el filtro oscuro de forma segura si el elemento existe
+    if (nivelActual >= 0)  { const el = document.getElementById('logo-1'); if(el) el.classList.remove('oscurecido'); }
+    if (nivelActual >= 11) { const el = document.getElementById('logo-2'); if(el) el.classList.remove('oscurecido'); }
+    if (nivelActual >= 21) { const el = document.getElementById('logo-3'); if(el) el.classList.remove('oscurecido'); }
+    if (nivelActual >= 31) { const el = document.getElementById('logo-4'); if(el) el.classList.remove('oscurecido'); }
+    if (nivelActual >= 41) { const el = document.getElementById('logo-5'); if(el) el.classList.remove('oscurecido'); }
+    if (nivelActual >= 51) { const el = document.getElementById('logo-6'); if(el) el.classList.remove('oscurecido'); }
+    if (nivelActual >= 61) { const el = document.getElementById('logo-7'); if(el) el.classList.remove('oscurecido'); }
+    if (nivelActual >= 71) { const el = document.getElementById('logo-8'); if(el) el.classList.remove('oscurecido'); }
+    if (nivelActual >= 81) { const el = document.getElementById('logo-9'); if(el) el.classList.remove('oscurecido'); }
+    if (nivelActual >= 91) { const el = document.getElementById('logo-10'); if(el) el.classList.remove('oscurecido'); }
+    
+    // Muestra opcionalmente la lista de nombres capturados en texto plano si existe el contenedor
+    const coleccionTexto = document.getElementById("coleccion-lista-nombres");
+    if (coleccionTexto) {
+        coleccionTexto.innerText = historial.join(", ") || "Ningún jugador capturado todavía.";
+    }
 }
 
-// Controladores de eventos del Menú
+// --- MANU DE ESCUCHADORES DE EVENTOS (CON DESBLOQUEO DE AUDIO) ---
 document.getElementById("btn-entrenamiento").addEventListener("click", () => {
     iniciarMusica();
     modoJuego = "entrenamiento";
@@ -399,15 +415,16 @@ document.getElementById("btn-estrella").addEventListener("click", () => {
 
 document.getElementById("btn-logros").addEventListener("click", () => {
     iniciarMusica();
-    actualizarPantallaLogros();
+    actualizarLogros(); // Llama a la nueva lógica optimizada
     document.getElementById("pantalla-inicio").classList.add("oculto");
     document.getElementById("pantalla-logros").classList.remove("oculto");
 });
 
 document.getElementById("btn-volver").addEventListener("click", () => {
     document.getElementById("pantalla-logros").classList.add("oculto");
+    document.getElementById("pantalla-inicio").classList.remove("remove" in document.createElement('div').classList ? "oculto" : "oculto");
     document.getElementById("pantalla-inicio").classList.remove("oculto");
 });
 
-// Inicialización silenciosa de la base de datos
+// Inicialización silenciosa de la base de datos al arrancar
 cargarBaseDatos();
