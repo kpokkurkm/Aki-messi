@@ -3,15 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¿Qué adivinás, bobo?</title>
+    <title>Akimessi - El Genio del Fútbol</title>
     <link rel="stylesheet" href="estilos.css">
+    <link href="https://fonts.googleapis.com/css2?family=Squada+One&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Elemento de audio con la ruta relativa correcta para GitHub -->
-    <audio id="musica-fondo" src="audio/parado_no_bailao.mp3" loop></audio>
 
-    <!-- PANTALLA DE INICIO (El Boceto) -->
+    <!-- PANTALLA 1: MENÚ DE INICIO -->
     <div id="pantalla-inicio" class="contenedor-inicio">
+        <div class="encabezado-inicio">
+            <h1 class="titulo-principal">AKI<span>MESSI</span></h1>
+            <div class="badge-subtitulo">⚽ EL GENIO DEL FÚTBOL ⚽</div>
+        </div>
+
+        <div class="portada-personaje">
+            <img src="img/messi.png" alt="Akimessi El Genio" class="messi-portada">
+        </div>
+
         <div class="contenedor-menu">
             <button id="btn-entrenamiento" class="btn-menu btn-rojo">ENTRENAMIENTO</button>
             <button id="btn-estrella" class="btn-menu btn-oro">ESTRELLA MUNDIAL</button>
@@ -19,70 +27,72 @@
         </div>
     </div>
 
-    <!-- PANTALLA DE LOGROS (Actualizada con Grid y Estilo Retro) -->
-    <div id="pantalla-logros" class="contenedor-logros oculto">
-        <h2 class="titulo-logros">TUS LOGROS</h2>
-        
-        <!-- Caja negra estirada -->
-        <div class="caja-contenido-logros">
-            <div class="stats-logros">
-                <p><strong>Racha actual:</strong> <span id="racha-consecutivas">0</span> victorias consecutivas</p>
-                <p><strong>Total futbolistas capturados:</strong> <span id="total-capturados">0</span></p>
-                <p><strong>Rango actual:</strong> <span id="rango-texto">Principiante (0-10)</span></p>
-            </div>
-
-            <hr class="linea-separadora">
-
-            <!-- Sección de Fichajes / Recompensas -->
-            <h3 class="subtitulo-logros">HISTORIAL DE FICHAJES</h3>
-            <div class="grid-logos">
-    <!-- Los 10 equipos en formato .svg con sus rangos de nivel correspondientes -->
-    <div class="item-logo"><img src="img/logos/equipo1.png" id="logo-1" class="logo-club oscurecido" alt="Torrejón"><span class="req-victorias">Niv. 1-10</span></div>
-    <div class="item-logo"><img src="img/logos/equipo2.svg" id="logo-2" class="logo-club oscurecido" alt="Alcorcón"><span class="req-victorias">Niv. 11-20</span></div>
-    <div class="item-logo"><img src="img/logos/equipo3.svg" id="logo-3" class="logo-club oscurecido" alt="Rayo Vallecano"><span class="req-victorias">Niv. 21-30</span></div>
-    <div class="item-logo"><img src="img/logos/equipo4.svg" id="logo-4" class="logo-club oscurecido" alt="Ajax"><span class="req-victorias">Niv. 31-40</span></div>
-    <div class="item-logo"><img src="img/logos/equipo5.svg" id="logo-5" class="logo-club oscurecido" alt="Tottenham"><span class="req-victorias">Niv. 41-50</span></div>
-    <div class="item-logo"><img src="img/logos/equipo6.svg" id="logo-6" class="logo-club oscurecido" alt="Liverpool"><span class="req-victorias">Niv. 51-60</span></div>
-    <div class="item-logo"><img src="img/logos/equipo7.svg" id="logo-7" class="logo-club oscurecido" alt="FC Barcelona"><span class="req-victorias">Niv. 61-70</span></div>
-    <div class="item-logo"><img src="img/logos/equipo8.svg" id="logo-8" class="logo-club oscurecido" alt="Inter Miami"><span class="req-victorias">Niv. 71-80</span></div>
-    <div class="item-logo"><img src="img/logos/equipo9.svg" id="logo-9" class="logo-club oscurecido" alt="Selección Española"><span class="req-victorias font-oro">Niv. 81-90</span></div>
-    <div class="item-logo"><img src="img/logos/equipo10.svg" id="logo-10" class="logo-club oscurecido" alt="Campeón del Mundo"><span class="req-victorias font-oro">Niv. 91-100</span></div>
-</div>
-        </div>
-        
-        <button id="btn-volver" class="btn-menu btn-azul">VOLVER AL MENÚ</button>
-    </div>
-
-    <!-- PANTALLA DEL JUEGO -->
+    <!-- PANTALLA 2: PANTALLA DE JUEGO -->
     <div id="pantalla-juego" class="contenedor-juego oculto">
-        <div id="marcador-superior" class="marcador-superior">
-            <span id="contador-preguntas">Pregunta Nº 1</span>
-        </div>
-
-        <!-- Campo de fútbol de fondo -->
         <div class="campo-futbol">
             <div class="linea-medio"></div>
         </div>
 
-        <!-- Contenedor del Genio y su Bocadillo -->
+        <div id="contador-preguntas" class="marcador-superior">PREGUNTA Nº 1</div>
+
         <div class="personaje-contenedor">
-            <div class="bocadillo-charla" id="bocadillo">
-                <p id="texto-pregunta">¡Hola! Pensá en un futbolista... ¿Qué adivinás, bobo?</p>
+            <!-- Bocadillo de charla para las preguntas -->
+            <div id="bocadillo-charla" class="bocadillo-charla">
+                <p id="texto-pregunta">Cargando la magia...</p>
             </div>
-            <img src="img/messi_genio.png" id="imagen-messi" alt="AkiMessi Genio">
+
+            <!-- Contenedor independiente para la Carta FUT al adivinar -->
+            <div id="contenedor-carta-fut" class="contenedor-carta-fut oculto"></div>
+
+            <div class="genio-contenedor">
+                <img id="imagen-messi" src="img/messi.png" alt="Akimessi">
+            </div>
         </div>
 
-        <!-- Panel de botones -->
         <div class="botones-contenedor">
             <div class="fila-botones">
                 <button class="btn btn-si" onclick="responder(1)">SÍ</button>
                 <button class="btn btn-no" onclick="responder(0)">NO</button>
             </div>
-            <div class="fila-unika">
-                <button class="btn btn-nose" onclick="responder(-1)">NO LO SÉ</button>
-            </div>
+            <button class="btn btn-nose" onclick="responder(-1)">NO LO SÉ</button>
         </div>
     </div>
+
+    <!-- PANTALLA 3: ÁLBUM Y LOGROS -->
+    <div id="pantalla-logros" class="contenedor-logros oculto">
+        <h2 class="titulo-logros">ÁLBUM DE CRACKS</h2>
+
+        <div class="caja-contenido-logros">
+            <div class="stats-logros">
+                <p>🔥 Racha actual: <span id="racha-consecutivas" class="font-oro">0</span> victorias</p>
+                <p>🎴 Jugadores en Álbum: <span id="total-capturados" class="font-oro">0</span></p>
+                <p>🏆 Rango: <span id="rango-texto" class="font-oro">Torrejón de Ardoz</span></p>
+            </div>
+
+            <hr class="linea-separadora">
+
+            <h3 class="subtitulo-logros">Escudos Desbloqueados</h3>
+            <div class="grid-logos">
+                <div class="item-logo"><img id="logo-1" src="img/logos/logo1.png" class="logo-club oscurecido" alt="Escudo 1"><span class="req-victorias">1</span></div>
+                <div class="item-logo"><img id="logo-2" src="img/logos/logo2.png" class="logo-club oscurecido" alt="Escudo 2"><span class="req-victorias">11</span></div>
+                <div class="item-logo"><img id="logo-3" src="img/logos/logo3.png" class="logo-club oscurecido" alt="Escudo 3"><span class="req-victorias">21</span></div>
+                <div class="item-logo"><img id="logo-4" src="img/logos/logo4.png" class="logo-club oscurecido" alt="Escudo 4"><span class="req-victorias">31</span></div>
+                <div class="item-logo"><img id="logo-5" src="img/logos/logo5.png" class="logo-club oscurecido" alt="Escudo 5"><span class="req-victorias">41</span></div>
+                <div class="item-logo"><img id="logo-6" src="img/logos/logo6.png" class="logo-club oscurecido" alt="Escudo 6"><span class="req-victorias">51</span></div>
+                <div class="item-logo"><img id="logo-7" src="img/logos/logo7.png" class="logo-club oscurecido" alt="Escudo 7"><span class="req-victorias">61</span></div>
+                <div class="item-logo"><img id="logo-8" src="img/logos/logo8.png" class="logo-club oscurecido" alt="Escudo 8"><span class="req-victorias">71</span></div>
+                <div class="item-logo"><img id="logo-9" src="img/logos/logo9.png" class="logo-club oscurecido" alt="Escudo 9"><span class="req-victorias">81</span></div>
+                <div class="item-logo"><img id="logo-10" src="img/logos/logo10.png" class="logo-club oscurecido" alt="Escudo 10"><span class="req-victorias">91</span></div>
+            </div>
+        </div>
+
+        <button id="btn-volver" class="btn-menu btn-rojo">VOLVER AL MENÚ</button>
+    </div>
+
+    <!-- AUDIO DE FONDO -->
+    <audio id="musica-fondo" loop>
+        <audio src="audio/parado_no_bailao.mp3"></audio>
+    </audio>
 
     <script src="juego.js"></script>
 </body>
