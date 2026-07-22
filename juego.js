@@ -24,7 +24,7 @@ const columnasPreguntas = [
 // Función auxiliar para limpiar impurezas de Excel/Google Sheets
 function limpiarCelda(texto) {
     if (!texto) return "";
-    return texto.trim().replace(/^["']|["']$/g, ''); // Quita espacios y comillas iniciales/finales
+    return texto.trim().replace(/^["']|["']$/g, ''); 
 }
 
 // --- CARGA DE DATOS ---
@@ -148,29 +148,50 @@ function hacerSiguientePregunta() {
         console.log("[Efecto Visual] ¡Activando modo Messi de Oro!");
         if (imgGenio) imgGenio.src = "img/messi_oro.png"; 
         
-        contenedorPrincipal.style.transition = "all 0.8s ease";
-        contenedorPrincipal.style.background = "linear-gradient(135deg, #FFE259 0%, #FFA751 100%)";
+        contenedorPrincipal.classList.add("ronda-dorada");
         
         document.getElementById("texto-pregunta").innerHTML = `✨ <b style="color: #D4AF37; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">¡LA PREGUNTA DE ORO!</b> ✨<br><br>${textoPregunta}`;
     } else {
+        contenedorPrincipal.classList.remove("ronda-dorada");
         document.getElementById("texto-pregunta").innerText = textoPregunta;
     }
     
     document.getElementById("contador-preguntas").innerText = "Pregunta Nº " + numeroPregunta;
 }
 
+/* ==========================================================================
+   PROPOSICIÓN CON CARTA FUT / PANINI
+   ========================================================================== */
 function proponerJugador(jugador) {
     estadoJuego = "ADIVINANDO";
     jugadorAdivinado = jugador;
     console.log("[IA] Proponiendo resolución final. Jugador:", jugador.nombre);
     
-    document.getElementById("contador-preguntas").innerText = "🔮 ¡TENGO UNA PROPUESTA!";
+    document.getElementById("contador-preguntas").innerText = "🔮 ¡TENGO A TU CRACK!";
     
     document.getElementById("texto-pregunta").innerHTML = `
-        <p style="margin-bottom: 12px;">¡Ya sé quién es! ¿Es <b>${jugador.nombre}</b>?</p>
-        <img src="img/futbolistas/${jugador.foto}" 
-             onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/53/53283.png';" 
-             style="max-width: 160px; max-height: 160px; border-radius: 20px; border: 4px solid #FFD700; box-shadow: 0 8px 20px rgba(0,0,0,0.3); display: block; margin: 15px auto;">
+        <p style="margin-bottom: 6px; font-weight: 800; font-size: 1.1rem; color: #111;">¿Estás pensando en este jugador?</p>
+        
+        <div class="fut-card-container">
+            <div class="fut-card">
+                <div class="fut-card-header">
+                    <div>
+                        <div class="fut-rating">99</div>
+                        <div class="fut-position">CRACK</div>
+                    </div>
+                </div>
+                <img class="fut-player-img" 
+                     src="img/futbolistas/${jugador.foto}" 
+                     onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/53/53283.png';"
+                     alt="${jugador.nombre}">
+                <div class="fut-player-name">${jugador.nombre}</div>
+                <div class="fut-stats-grid">
+                    <div class="fut-stat-item">EQP <span>${jugador.equipo || 'Club'}</span></div>
+                    <div class="fut-stat-item">NAC <span>${jugador.nacionalidad || 'Mundo'}</span></div>
+                    <div class="fut-stat-item">PAC <span>99</span></div>
+                </div>
+            </div>
+        </div>
     `;
 }
 
@@ -353,7 +374,6 @@ function actualizarLogros() {
     const racha = parseInt(localStorage.getItem("racha_competitiva")) || 0;
     const nivelActual = historial.length; 
 
-    // Actualiza los marcadores numéricos de la interfaz si existen
     if (document.getElementById('racha-consecutivas')) {
         document.getElementById('racha-consecutivas').innerText = racha;
     }
@@ -361,7 +381,6 @@ function actualizarLogros() {
         document.getElementById('total-capturados').innerText = nivelActual;
     }
     
-    // Determina tu rango de texto oficial en base a tus nuevos 10 equipos
     let rangoTexto = "A.D. Torrejón de Ardoz (Niv. 1-10)";
     if (nivelActual > 10 && nivelActual <= 20) rangoTexto = "Alcorcón (Niv. 11-20)";
     if (nivelActual > 20 && nivelActual <= 30) rangoTexto = "Rayo Vallecano (Niv. 21-30)";
@@ -377,7 +396,6 @@ function actualizarLogros() {
         document.getElementById('rango-texto').innerText = rangoTexto;
     }
 
-    // CONTROL DE ESCUDOS: Remueve la silueta negra al cumplir el nivel requerido
     if (nivelActual >= 1)  { const el = document.getElementById('logo-1'); if(el) el.classList.remove('oscurecido'); }
     if (nivelActual >= 11) { const el = document.getElementById('logo-2'); if(el) el.classList.remove('oscurecido'); }
     if (nivelActual >= 21) { const el = document.getElementById('logo-3'); if(el) el.classList.remove('oscurecido'); }
@@ -389,14 +407,13 @@ function actualizarLogros() {
     if (nivelActual >= 81) { const el = document.getElementById('logo-9'); if(el) el.classList.remove('oscurecido'); }
     if (nivelActual >= 91) { const el = document.getElementById('logo-10'); if(el) el.classList.remove('oscurecido'); }
     
-    // Muestra opcionalmente la lista de nombres capturados en texto plano si existe el contenedor
     const coleccionTexto = document.getElementById("coleccion-lista-nombres");
     if (coleccionTexto) {
         coleccionTexto.innerText = historial.join(", ") || "Ningún jugador capturado todavía.";
     }
 }
 
-// --- MANU DE ESCUCHADORES DE EVENTOS (CON DESBLOQUEO DE AUDIO) ---
+// --- MANU DE ESCUCHADORES DE EVENTOS ---
 document.getElementById("btn-entrenamiento").addEventListener("click", () => {
     iniciarMusica();
     modoJuego = "entrenamiento";
