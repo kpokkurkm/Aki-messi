@@ -19,6 +19,18 @@ const columnasPreguntas = [
     "FICHAJE_CARO", "ENTRENADOR", "CALVO", "LEYENDA_90"
 ];
 
+// --- ACTUALIZACIÓN DINÁMICA DE IMAGEN DE MESSI ---
+function actualizarImagenMessi(numPregunta) {
+    const imgMessi = document.getElementById("messi-img");
+    if (!imgMessi) return;
+
+    if (numPregunta >= 10 || estadoJuego === "ADIVINANDO") {
+        imgMessi.src = "img/messi_oro.png";
+    } else {
+        imgMessi.src = "img/messi_genio.png";
+    }
+}
+
 function limpiarCelda(texto) {
     if (!texto) return "";
     return texto.trim().replace(/^["']|["']$/g, ''); 
@@ -78,10 +90,13 @@ function iniciarJuego() {
     document.getElementById("contenedor-carta-fut").classList.add("oculto");
     document.getElementById("contenedor-carta-fut").innerHTML = "";
 
+    actualizarImagenMessi(1);
     hacerSiguientePregunta();
 }
 
 function hacerSiguientePregunta() {
+    actualizarImagenMessi(numeroPregunta);
+
     if (numeroPregunta > 10) {
         if (candidatos.length > 0) proponerJugador(candidatos[0]);
         else mostrarFormularioAprendizaje();
@@ -137,6 +152,7 @@ function hacerSiguientePregunta() {
 function proponerJugador(jugador) {
     estadoJuego = "ADIVINANDO";
     jugadorAdivinado = jugador;
+    actualizarImagenMessi(10);
 
     // Ocultar bocadillo de diálogo normal
     document.getElementById("bocadillo-charla").classList.add("oculto");
@@ -225,6 +241,7 @@ function responder(valor) {
 
 function registrarVictoria() {
     estadoJuego = "APRENDIENDO";
+    actualizarImagenMessi(10);
     document.getElementById("contenedor-carta-fut").classList.add("oculto");
     document.getElementById("bocadillo-charla").classList.remove("oculto");
     
@@ -258,6 +275,7 @@ function registrarVictoria() {
 
 function mostrarFormularioAprendizaje() {
     estadoJuego = "APRENDIENDO";
+    actualizarImagenMessi(10);
     document.getElementById("contenedor-carta-fut").classList.add("oculto");
     document.getElementById("bocadillo-charla").classList.remove("oculto");
     

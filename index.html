@@ -4,95 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Akimessi - El Genio del Fútbol</title>
+    
+    <!-- Evita el error 404 del favicon mientras no tengas el ícono -->
+    <link rel="icon" href="data:,">
+    
     <link rel="stylesheet" href="estilos.css">
-    <link href="https://fonts.googleapis.com/css2?family=Squada+One&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- PANTALLA 1: MENÚ DE INICIO -->
-    <div id="pantalla-inicio" class="contenedor-inicio">
-        <div class="encabezado-inicio">
-            <h1 class="titulo-principal">AKI<span>MESSI</span></h1>
-            <div class="badge-subtitulo">⚽ EL GENIO DEL FÚTBOL ⚽</div>
-        </div>
-
-        <div class="portada-personaje">
-            <img src="img/messi.png" alt="Akimessi El Genio" class="messi-portada">
-        </div>
-
-        <div class="contenedor-menu">
-            <button id="btn-entrenamiento" class="btn-menu btn-rojo">ENTRENAMIENTO</button>
-            <button id="btn-estrella" class="btn-menu btn-oro">ESTRELLA MUNDIAL</button>
-            <button id="btn-logros" class="btn-menu btn-azul">LOGROS</button>
-        </div>
+    <!-- Logos de fondo decorativos -->
+    <div class="decoracion-logos">
+        <img src="img/logos/equipo1.png" class="logo-bg logo1" alt="Logo">
+        <img src="img/logos/equipo2.svg" class="logo-bg logo2" alt="Logo">
+        <img src="img/logos/equipo3.svg" class="logo-bg logo3" alt="Logo">
+        <img src="img/logos/equipo4.svg" class="logo-bg logo4" alt="Logo">
+        <img src="img/logos/equipo5.svg" class="logo-bg logo5" alt="Logo">
+        <img src="img/logos/equipo6.svg" class="logo-bg logo6" alt="Logo">
+        <img src="img/logos/equipo7.svg" class="logo-bg logo7" alt="Logo">
+        <img src="img/logos/equipo8.svg" class="logo-bg logo8" alt="Logo">
+        <img src="img/logos/equipo9.svg" class="logo-bg logo9" alt="Logo">
+        <img src="img/logos/equipo10.svg" class="logo-bg logo10" alt="Logo">
     </div>
 
-    <!-- PANTALLA 2: PANTALLA DE JUEGO -->
-    <div id="pantalla-juego" class="contenedor-juego oculto">
-        <div class="campo-futbol">
-            <div class="linea-medio"></div>
-        </div>
+    <div class="contenedor-juego">
+        
+        <!-- Header con Banner -->
+        <header class="encabezado">
+            <h1 class="titulo-juego">AKIMESSI</h1>
+            <p class="subtitulo">EL GENIO DEL FÚTBOL</p>
+        </header>
 
-        <div id="contador-preguntas" class="marcador-superior">PREGUNTA Nº 1</div>
-
+        <!-- Personaje (Messi) -->
         <div class="personaje-contenedor">
-            <!-- Bocadillo de charla para las preguntas -->
-            <div id="bocadillo-charla" class="bocadillo-charla">
-                <p id="texto-pregunta">Cargando la magia...</p>
+            <img id="messi-img" src="img/messi_genio.png" alt="Akimessi">
+        </div>
+
+        <!-- Pantalla de Inicio / Menú -->
+        <div id="pantalla-inicio" class="tarjeta-menu">
+            <button class="btn btn-modo" onclick="iniciarJuego('entrenamiento')">ENTRENAMIENTO</button>
+            <button class="btn btn-modo btn-destacado" onclick="iniciarJuego('estrella')">ESTRELLA MUNDIAL</button>
+            <button class="btn btn-modo" onclick="abrirLogros()">LOGROS</button>
+        </div>
+
+        <!-- Pantalla de Preguntas -->
+        <div id="pantalla-juego" class="tarjeta-pregunta oculto">
+            <div class="contador-pregunta">
+                <span id="numero-pregunta">PREGUNTA N° 1</span>
+            </div>
+            
+            <div class="caja-pregunta">
+                <p id="texto-pregunta">Cargando pregunta...</p>
             </div>
 
-            <!-- Contenedor independiente para la Carta FUT al adivinar -->
-            <div id="contenedor-carta-fut" class="contenedor-carta-fut oculto"></div>
-
-            <div class="genio-contenedor">
-                <img id="imagen-messi" src="img/messi.png" alt="Akimessi">
+            <div class="opciones-respuesta">
+                <button class="btn btn-respuesta btn-si" onclick="responder(1)">SÍ</button>
+                <button class="btn btn-respuesta btn-no" onclick="responder(0)">NO</button>
+                <button class="btn btn-respuesta btn-nsnc" onclick="responder(-1)">NO LO SÉ</button>
             </div>
         </div>
 
-        <div class="botones-contenedor">
-            <div class="fila-botones">
-                <button class="btn btn-si" onclick="responder(1)">SÍ</button>
-                <button class="btn btn-no" onclick="responder(0)">NO</button>
+        <!-- Pantalla de Resultado / Adivinanza Final -->
+        <div id="pantalla-resultado" class="tarjeta-resultado oculto">
+            <h2 id="titulo-resultado">¡YA SÉ EN QUIÉN PIENSAS!</h2>
+            <div class="carta-fut">
+                <div class="carta-nombre" id="nombre-jugador-adivinado">LEO MESSI</div>
             </div>
-            <button class="btn btn-nose" onclick="responder(-1)">NO LO SÉ</button>
+            <div class="acciones-resultado">
+                <button class="btn btn-si" onclick="confirmarAdivinanza(true)">¡ACERTASTE!</button>
+                <button class="btn btn-no" onclick="confirmarAdivinanza(false)">NO ES ÉL</button>
+            </div>
         </div>
+
     </div>
-
-    <!-- PANTALLA 3: ÁLBUM Y LOGROS -->
-    <div id="pantalla-logros" class="contenedor-logros oculto">
-        <h2 class="titulo-logros">ÁLBUM DE CRACKS</h2>
-
-        <div class="caja-contenido-logros">
-            <div class="stats-logros">
-                <p>🔥 Racha actual: <span id="racha-consecutivas" class="font-oro">0</span> victorias</p>
-                <p>🎴 Jugadores en Álbum: <span id="total-capturados" class="font-oro">0</span></p>
-                <p>🏆 Rango: <span id="rango-texto" class="font-oro">Torrejón de Ardoz</span></p>
-            </div>
-
-            <hr class="linea-separadora">
-
-            <h3 class="subtitulo-logros">Escudos Desbloqueados</h3>
-            <div class="grid-logos">
-                <div class="item-logo"><img id="logo-1" src="img/logos/logo1.png" class="logo-club oscurecido" alt="Escudo 1"><span class="req-victorias">1</span></div>
-                <div class="item-logo"><img id="logo-2" src="img/logos/logo2.png" class="logo-club oscurecido" alt="Escudo 2"><span class="req-victorias">11</span></div>
-                <div class="item-logo"><img id="logo-3" src="img/logos/logo3.png" class="logo-club oscurecido" alt="Escudo 3"><span class="req-victorias">21</span></div>
-                <div class="item-logo"><img id="logo-4" src="img/logos/logo4.png" class="logo-club oscurecido" alt="Escudo 4"><span class="req-victorias">31</span></div>
-                <div class="item-logo"><img id="logo-5" src="img/logos/logo5.png" class="logo-club oscurecido" alt="Escudo 5"><span class="req-victorias">41</span></div>
-                <div class="item-logo"><img id="logo-6" src="img/logos/logo6.png" class="logo-club oscurecido" alt="Escudo 6"><span class="req-victorias">51</span></div>
-                <div class="item-logo"><img id="logo-7" src="img/logos/logo7.png" class="logo-club oscurecido" alt="Escudo 7"><span class="req-victorias">61</span></div>
-                <div class="item-logo"><img id="logo-8" src="img/logos/logo8.png" class="logo-club oscurecido" alt="Escudo 8"><span class="req-victorias">71</span></div>
-                <div class="item-logo"><img id="logo-9" src="img/logos/logo9.png" class="logo-club oscurecido" alt="Escudo 9"><span class="req-victorias">81</span></div>
-                <div class="item-logo"><img id="logo-10" src="img/logos/logo10.png" class="logo-club oscurecido" alt="Escudo 10"><span class="req-victorias">91</span></div>
-            </div>
-        </div>
-
-        <button id="btn-volver" class="btn-menu btn-rojo">VOLVER AL MENÚ</button>
-    </div>
-
-    <!-- AUDIO DE FONDO -->
-    <audio id="musica-fondo" loop>
-        <audio src="audio/parado_no_bailao.mp3"></audio>
-    </audio>
 
     <script src="juego.js"></script>
 </body>
