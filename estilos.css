@@ -1,147 +1,180 @@
-/* =========================================================
-   1. RESET Y CONFIGURACIÓN PRINCIPAL (CENTRADOR PARA PC)
-   ========================================================= */
+/* ==========================================
+   AKIMESSI - ESTILOS PRINCIPALES Y REFORZADOS
+   ========================================== */
 
+/* 1. RESET Y CONFIGURACIÓN GENERAL */
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 body {
-    min-height: 100vh;
-    background-color: #121212;
+    background-color: #0d1117;
     color: #ffffff;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
     overflow-x: hidden;
+    position: relative;
 }
 
-/* Regla general de seguridad para evitar desbordamientos de imágenes */
-img {
-    max-width: 100%;
-    height: auto;
+/* 2. FIX DEL FONDO Y SLIDER DE ESCUDOS */
+/* Mantiene los escudos al fondo sin tapar ni desencajar el menú */
+#bg-slider, .bg-slider, .bg-slide, .escudo-bg, body > img:not(#mago-img) {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -10 !important;
+    pointer-events: none;
+    opacity: 0.15; /* Transparencia para que no opaque la interfaz */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 }
 
-/* Ocultar elementos que no deben verse de inicio */
-.oculto, 
-#pantalla-logros.oculto, 
-.grid-logros.oculto {
-    display: none !important;
+.bg-slide img, #bg-slider img, img.escudo-fondo {
+    max-width: 55vw;
+    max-height: 55vh;
+    object-fit: contain;
+    filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.15));
+    transition: opacity 0.6s ease-in-out;
 }
 
-/* =========================================================
-   2. CONTENEDOR DEL JUEGO (PANTALLA PRINCIPAL EN PC)
-   ========================================================= */
-
-.app-container, #app, main, .pantalla {
-    width: 100%;
-    max-width: 700px;
-    background-color: #1e1e1e;
-    border-radius: 20px;
-    padding: 25px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+/* 3. CONTENEDOR PRINCIPAL DEL JUEGO */
+.container, #game-container, .main-card, #app {
+    background: rgba(18, 24, 38, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 24px;
+    padding: 30px 25px;
+    width: 90%;
+    max-width: 440px;
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 150, 255, 0.15);
+    z-index: 5;
+    position: relative;
+    margin: 20px auto;
 }
 
-/* Imagen de Messi en el menú y durante el juego */
-#messi-img, .messi-imagen, .mago-messi {
-    max-width: 220px !important;
-    max-height: 220px !important;
-    margin: 15px auto;
-    display: block;
-    object-fit: contain;
-}
-
-/* Bocadillo de texto del Genio */
-#bocadillo-charla, .bocadillo {
-    background-color: #2b2b2b;
-    border: 2px solid #ffd700;
-    border-radius: 15px;
-    padding: 20px;
-    margin: 15px 0;
-    width: 100%;
-    max-width: 500px;
-}
-
-/* =========================================================
-   3. SECCIÓN DE LOGROS (PROTECCIÓN Y TAMAÑO CONTROLADO)
-   ========================================================= */
-
-/* Ocultar contenedor de logros si el juego acaba de arrancar */
-#pantalla-logros, #logros-contenedor, .seccion-logros {
-    display: none; /* Solo se mostrará cuando se active la pantalla de logros */
-}
-
-/* Cuando la pantalla de logros NO esté oculta */
-#pantalla-logros:not(.oculto), .seccion-logros:not(.oculto) {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-/* Grid o rejilla para los logos/logros */
-.grid-logros, #grid-logros {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 15px;
-    width: 100%;
-    max-width: 500px;
-    margin-top: 20px;
-    padding: 10px;
-}
-
-/* TAMAÑO OBLIGATORIO DE CADA LOGO DE LOGRO (Máximo 60px) */
-.grid-logros img, 
-.logro img, 
-#pantalla-logros img {
-    width: 60px !important;
-    height: 60px !important;
-    max-width: 60px !important;
-    max-height: 60px !important;
-    object-fit: contain;
-    margin: 0 auto;
-    display: block;
-}
-
-/* Estado bloqueado para logros no conseguidos */
-.logro.bloqueado, .oscurecido {
-    filter: grayscale(100%) opacity(30%);
-}
-
-/* =========================================================
-   4. BOTONES DEL JUEGO
-   ========================================================= */
-
-.botones-contenedor, .opciones {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-    width: 100%;
-    max-width: 500px;
-    margin-top: 15px;
-}
-
-.btn {
-    padding: 12px 20px;
-    font-size: 1rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
+/* 4. CABECERA Y TÍTULOS */
+h1, .game-title {
+    font-size: 2.1rem;
+    font-weight: 900;
+    letter-spacing: 2px;
     text-transform: uppercase;
+    color: #ffffff;
+    text-shadow: 0 0 12px rgba(0, 180, 255, 0.6);
+    margin-bottom: 4px;
 }
 
-.btn-si { background-color: #28a745; color: white; }
-.btn-no { background-color: #dc3545; color: white; }
-.btn-nose { background-color: #ffc107; color: #111; }
-.btn-menu { background-color: #007bff; color: white; width: 100%; max-width: 250px; }
+.subtitle, h2 {
+    font-size: 0.95rem;
+    color: #00d2ff;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+}
+
+/* 5. PERSONAJE (MESSI / MAGO) */
+.mago-container, #mago-container {
+    margin: 15px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mago-container img, #mago-img, img.mago {
+    max-width: 170px;
+    height: auto;
+    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.6));
+    transition: transform 0.3s ease;
+}
+
+.mago-container img:hover, #mago-img:hover {
+    transform: scale(1.04);
+}
+
+/* 6. BOTONES Y ACCIONES */
+.btn-container, .options-container, .menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    margin-top: 15px;
+    align-items: center;
+}
+
+/* Estilo base */
+button, .btn {
+    border: none;
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    outline: none;
+    color: #ffffff;
+    width: 100%;
+}
+
+button:hover, .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+    filter: brightness(1.15);
+}
+
+button:active, .btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+/* Clases específicas solicitadas */
+.btn-s {
+    background: #28a745;
+    color: #ffffff;
+}
+
+.btn-m {
+    background: #dc3545;
+    color: #ffffff;
+}
+
+.btn-menu {
+    background: #007bff;
+    color: #ffffff;
+    width: 100%;
+    max-width: 280px;
+}
+
+/* 7. RESPONSIVO PARA MÓVILES */
+@media (max-width: 480px) {
+    .container, #game-container {
+        padding: 22px 18px;
+        width: 95%;
+    }
+
+    h1, .game-title {
+        font-size: 1.75rem;
+    }
+
+    .mago-container img, #mago-img {
+        max-width: 130px;
+    }
+
+    button, .btn {
+        padding: 12px 16px;
+        font-size: 0.88rem;
+    }
+}
