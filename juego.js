@@ -86,9 +86,14 @@ function iniciarJuego() {
     jugadorAdivinado = null;
 
     // Asegurar visibilidad correcta de la interfaz
-    document.getElementById("bocadillo-charla").classList.remove("oculto");
-    document.getElementById("contenedor-carta-fut").classList.add("oculto");
-    document.getElementById("contenedor-carta-fut").innerHTML = "";
+    const bocadillo = document.getElementById("bocadillo-charla");
+    if (bocadillo) bocadillo.classList.remove("oculto");
+
+    const contenedorCarta = document.getElementById("contenedor-carta-fut");
+    if (contenedorCarta) {
+        contenedorCarta.classList.add("oculto");
+        contenedorCarta.innerHTML = "";
+    }
 
     actualizarImagenMessi(1);
     hacerSiguientePregunta();
@@ -144,8 +149,11 @@ function hacerSiguientePregunta() {
     }
     
     const textoPregunta = traducirAtributoAPregunta(atributoActual);
-    document.getElementById("texto-pregunta").innerText = textoPregunta;
-    document.getElementById("contador-preguntas").innerText = "PREGUNTA Nº " + numeroPregunta;
+    const elemPregunta = document.getElementById("texto-pregunta");
+    if (elemPregunta) elemPregunta.innerText = textoPregunta;
+
+    const elemContador = document.getElementById("contador-preguntas");
+    if (elemContador) elemContador.innerText = "PREGUNTA Nº " + numeroPregunta;
 }
 
 // --- PRESENTACIÓN DE CARTA FUT DESACOPLADA ---
@@ -155,30 +163,34 @@ function proponerJugador(jugador) {
     actualizarImagenMessi(10);
 
     // Ocultar bocadillo de diálogo normal
-    document.getElementById("bocadillo-charla").classList.add("oculto");
-    document.getElementById("contador-preguntas").innerText = "🔮 ¡MI PREDICCIÓN!";
+    const bocadillo = document.getElementById("bocadillo-charla");
+    if (bocadillo) bocadillo.classList.add("oculto");
+
+    const elemContador = document.getElementById("contador-preguntas");
+    if (elemContador) elemContador.innerText = "🔮 ¡MI PREDICCIÓN!";
 
     // Generar la Carta FUT independiente
     const contenedorFut = document.getElementById("contenedor-carta-fut");
-    contenedorFut.classList.remove("oculto");
-    
-    contenedorFut.innerHTML = `
-        <div class="fut-card">
-            <div class="fut-card-header">
-                <div class="fut-rating">99</div>
-                <div class="fut-position">CRACK</div>
+    if (contenedorFut) {
+        contenedorFut.classList.remove("oculto");
+        contenedorFut.innerHTML = `
+            <div class="fut-card">
+                <div class="fut-card-header">
+                    <div class="fut-rating">99</div>
+                    <div class="fut-position">CRACK</div>
+                </div>
+                <img class="fut-player-img" 
+                     src="img/futbolistas/${jugador.foto}" 
+                     onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/53/53283.png';"
+                     alt="${jugador.nombre}">
+                <div class="fut-player-name">${jugador.nombre}</div>
+                <div class="fut-stats-grid">
+                    <div class="fut-stat-item">EQP <span>${jugador.equipo || 'Club'}</span></div>
+                    <div class="fut-stat-item">NAC <span>${jugador.nacionalidad || 'Mundo'}</span></div>
+                </div>
             </div>
-            <img class="fut-player-img" 
-                 src="img/futbolistas/${jugador.foto}" 
-                 onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/53/53283.png';"
-                 alt="${jugador.nombre}">
-            <div class="fut-player-name">${jugador.nombre}</div>
-            <div class="fut-stats-grid">
-                <div class="fut-stat-item">EQP <span>${jugador.equipo || 'Club'}</span></div>
-                <div class="fut-stat-item">NAC <span>${jugador.nacionalidad || 'Mundo'}</span></div>
-            </div>
-        </div>
-    `;
+        `;
+    }
 }
 
 function traducirAtributoAPregunta(attr) {
@@ -242,9 +254,15 @@ function responder(valor) {
 function registrarVictoria() {
     estadoJuego = "APRENDIENDO";
     actualizarImagenMessi(10);
-    document.getElementById("contenedor-carta-fut").classList.add("oculto");
-    document.getElementById("bocadillo-charla").classList.remove("oculto");
     
+    const contenedorCarta = document.getElementById("contenedor-carta-fut");
+    if (contenedorCarta) contenedorCarta.classList.add("oculto");
+
+    const bocadillo = document.getElementById("bocadillo-charla");
+    if (bocadillo) bocadillo.classList.remove("oculto");
+    
+    const elemPregunta = document.getElementById("texto-pregunta");
+
     if (modoJuego === "competitivo") {
         const historial = JSON.parse(localStorage.getItem("album_capturas")) || [];
         if (!historial.includes(jugadorAdivinado.nombre)) {
@@ -256,43 +274,60 @@ function registrarVictoria() {
         racha++;
         localStorage.setItem("racha_competitiva", racha);
 
-        document.getElementById("texto-pregunta").innerHTML = `
-            ¡Jaja! ¡Te gané, viste! Re fácil.<br><br>
-            🏆 <b>${jugadorAdivinado.nombre}</b> se sumó a tu Álbum.
-        `;
+        if (elemPregunta) {
+            elemPregunta.innerHTML = `
+                ¡Jaja! ¡Te gané, viste! Re fácil.<br><br>
+                🏆 <b>${jugadorAdivinado.nombre}</b> se sumó a tu Álbum.
+            `;
+        }
     } else {
-        document.getElementById("texto-pregunta").innerHTML = `
-            ¡Jaja! ¡Te gané, viste! Re fácil.<br><br>
-            🧠 Adiviné a <b>${jugadorAdivinado.nombre}</b>.
-        `;
+        if (elemPregunta) {
+            elemPregunta.innerHTML = `
+                ¡Jaja! ¡Te gané, viste! Re fácil.<br><br>
+                🧠 Adiviné a <b>${jugadorAdivinado.nombre}</b>.
+            `;
+        }
     }
 
     const contenedorBotones = document.querySelector(".botones-contenedor");
-    contenedorBotones.innerHTML = `
-        <button class="btn btn-si" onclick="location.reload()" style="width: 100%;">Volver al menú</button>
-    `;
+    if (contenedorBotones) {
+        contenedorBotones.innerHTML = `
+            <button class="btn btn-si" onclick="location.reload()" style="width: 100%;">Volver al menú</button>
+        `;
+    }
 }
 
 function mostrarFormularioAprendizaje() {
     estadoJuego = "APRENDIENDO";
     actualizarImagenMessi(10);
-    document.getElementById("contenedor-carta-fut").classList.add("oculto");
-    document.getElementById("bocadillo-charla").classList.remove("oculto");
+
+    const contenedorCarta = document.getElementById("contenedor-carta-fut");
+    if (contenedorCarta) contenedorCarta.classList.add("oculto");
+
+    const bocadillo = document.getElementById("bocadillo-charla");
+    if (bocadillo) bocadillo.classList.remove("oculto");
     
-    document.getElementById("texto-pregunta").innerText = "¡Me rindo, che! No sé quién es... ¿En qué futbolista estabas pensando?";
+    const elemPregunta = document.getElementById("texto-pregunta");
+    if (elemPregunta) {
+        elemPregunta.innerText = "¡Me rindo, che! No sé quién es... ¿En qué futbolista estabas pensando?";
+    }
     
     const contenedorBotones = document.querySelector(".botones-contenedor");
-    contenedorBotones.innerHTML = `
-        <div style="display: flex; flex-direction: column; gap: 10px; width: 90%; margin: 0 auto;">
-            <input type="text" id="nombre-nuevo-jugador" placeholder="Escribí el nombre del jugador..." 
-                   style="padding: 12px; border-radius: 20px; border: 2px solid #FFD700; font-size: 15px; text-align: center; width: 100%; outline: none; font-weight: bold;">
-            <button class="btn btn-si" onclick="procesarAprendizaje()" style="width: 100%;">Enseñar a Akimessi</button>
-        </div>
-    `;
+    if (contenedorBotones) {
+        contenedorBotones.innerHTML = `
+            <div style="display: flex; flex-direction: column; gap: 10px; width: 90%; margin: 0 auto;">
+                <input type="text" id="nombre-nuevo-jugador" placeholder="Escribí el nombre del jugador..." 
+                       style="padding: 12px; border-radius: 20px; border: 2px solid #FFD700; font-size: 15px; text-align: center; width: 100%; outline: none; font-weight: bold;">
+                <button class="btn btn-si" onclick="procesarAprendizaje()" style="width: 100%;">Enseñar a Akimessi</button>
+            </div>
+        `;
+    }
 }
 
 function procesarAprendizaje() {
-    const nombreInput = document.getElementById("nombre-nuevo-jugador").value.trim();
+    const input = document.getElementById("nombre-nuevo-jugador");
+    const nombreInput = input ? input.value.trim() : "";
+    
     if (!nombreInput) {
         alert("¡Dale, bobo! Poné un nombre válido.");
         return;
@@ -317,12 +352,17 @@ function procesarAprendizaje() {
 
     if (modoJuego === "competitivo") localStorage.setItem("racha_competitiva", 0);
 
-    document.getElementById("texto-pregunta").innerText = `¡Guardé a ${nombreInput} en mi memoria! En la próxima partida no se me escapa.`;
+    const elemPregunta = document.getElementById("texto-pregunta");
+    if (elemPregunta) {
+        elemPregunta.innerText = `¡Guardé a ${nombreInput} en mi memoria! En la próxima partida no se me escapa.`;
+    }
     
     const contenedorBotones = document.querySelector(".botones-contenedor");
-    contenedorBotones.innerHTML = `
-        <button class="btn btn-si" onclick="location.reload()" style="width: 100%;">Volver al menú</button>
-    `;
+    if (contenedorBotones) {
+        contenedorBotones.innerHTML = `
+            <button class="btn btn-si" onclick="location.reload()" style="width: 100%;">Volver al menú</button>
+        `;
+    }
 }
 
 function iniciarMusica() {
@@ -344,33 +384,47 @@ function actualizarLogros() {
     }
 }
 
-// --- EVENTOS ---
-document.getElementById("btn-entrenamiento").addEventListener("click", () => {
-    iniciarMusica();
-    modoJuego = "entrenamiento";
-    document.getElementById("pantalla-inicio").classList.add("oculto");
-    document.getElementById("pantalla-juego").classList.remove("oculto");
-    iniciarJuego();
-});
+// --- EVENTOS PROTEGIDOS CONTRA ERRORES NULL ---
+document.addEventListener("DOMContentLoaded", () => {
+    const btnEntrenamiento = document.getElementById("btn-entrenamiento");
+    if (btnEntrenamiento) {
+        btnEntrenamiento.addEventListener("click", () => {
+            iniciarMusica();
+            modoJuego = "entrenamiento";
+            document.getElementById("pantalla-inicio")?.classList.add("oculto");
+            document.getElementById("pantalla-juego")?.classList.remove("oculto");
+            iniciarJuego();
+        });
+    }
 
-document.getElementById("btn-estrella").addEventListener("click", () => {
-    iniciarMusica();
-    modoJuego = "competitivo";
-    document.getElementById("pantalla-inicio").classList.add("oculto");
-    document.getElementById("pantalla-juego").classList.remove("oculto");
-    iniciarJuego();
-});
+    const btnEstrella = document.getElementById("btn-estrella");
+    if (btnEstrella) {
+        btnEstrella.addEventListener("click", () => {
+            iniciarMusica();
+            modoJuego = "competitivo";
+            document.getElementById("pantalla-inicio")?.classList.add("oculto");
+            document.getElementById("pantalla-juego")?.classList.remove("oculto");
+            iniciarJuego();
+        });
+    }
 
-document.getElementById("btn-logros").addEventListener("click", () => {
-    iniciarMusica();
-    actualizarLogros(); 
-    document.getElementById("pantalla-inicio").classList.add("oculto");
-    document.getElementById("pantalla-logros").classList.remove("oculto");
-});
+    const btnLogros = document.getElementById("btn-logros");
+    if (btnLogros) {
+        btnLogros.addEventListener("click", () => {
+            iniciarMusica();
+            actualizarLogros(); 
+            document.getElementById("pantalla-inicio")?.classList.add("oculto");
+            document.getElementById("pantalla-logros")?.classList.remove("oculto");
+        });
+    }
 
-document.getElementById("btn-volver").addEventListener("click", () => {
-    document.getElementById("pantalla-logros").classList.add("oculto");
-    document.getElementById("pantalla-inicio").classList.remove("oculto");
+    const btnVolver = document.getElementById("btn-volver");
+    if (btnVolver) {
+        btnVolver.addEventListener("click", () => {
+            document.getElementById("pantalla-logros")?.classList.add("oculto");
+            document.getElementById("pantalla-inicio")?.classList.remove("oculto");
+        });
+    }
 });
 
 cargarBaseDatos();
